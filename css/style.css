@@ -168,7 +168,7 @@ dialog#detail::backdrop { background: rgba(30,26,22,.7); }
 [hidden] { display: none !important; }
 
 /* ---------- Brand ---------- */
-.logo-badge { height: 50px; width: auto; display: block; }
+.logo-badge { height: 54px; width: auto; display: block; }
 .brand-mark { width: 34px; height: 34px; flex: none; }
 .site-footer .maker { display: flex; align-items: center; gap: 12px; }
 .contact-box .fox { width: 72px; height: 72px; float: right; margin: -8px -4px 0 12px; }
