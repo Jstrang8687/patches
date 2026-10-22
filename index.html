@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patches</title>
+  <meta name="description" content="Original photography prints and handmade woodwork.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="index.html"><img src="favicon.svg" alt="" width="28" height="28">Patches</a>
+      <button class="nav-toggle" aria-label="Menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <nav class="nav">
+        <a href="photography.html">Photography</a>
+        <a href="woodworking.html">Woodworking</a>
+        <a href="about.html">About</a>
+        <a href="#" data-etsy target="_blank" rel="noopener">Shop on Etsy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <span class="eyebrow">Photography &amp; Woodworking</span>
+      <h1>Pieces made slowly,<br>by hand and by eye.</h1>
+      <p>Original photographs and one-of-a-kind woodwork. Every piece is made in small batches and shipped with care.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="photography.html">Browse photography</a>
+        <a class="btn" href="woodworking.html">Browse woodworking</a>
+      </div>
+    </div>
+
+    <div class="wrap crafts">
+      <a class="craft" href="photography.html">
+        <img src="https://picsum.photos/seed/patches-fog/1200/900" alt="Photography">
+        <span><strong>Photography</strong>Fine art prints, signed and limited</span>
+      </a>
+      <a class="craft" href="woodworking.html">
+        <img src="https://picsum.photos/seed/patches-walnut/1200/900" alt="Woodworking">
+        <span><strong>Woodworking</strong>Boards, bowls, and furniture</span>
+      </a>
+    </div>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Featured pieces</h2>
+          <a href="#" data-etsy target="_blank" rel="noopener">See everything on Etsy &rarr;</a>
+        </div>
+        <div class="grid" data-gallery="featured"></div>
+      </div>
+    </section>
+
+    <section class="where">
+      <div class="wrap">
+        <div>
+          <h2>Where to buy</h2>
+          <p>Every piece on this site links to its Etsy listing, where checkout and shipping are handled securely. Have a question, or want something custom? Just send an email.</p>
+        </div>
+        <div class="actions" style="display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="#" data-etsy target="_blank" rel="noopener">Visit the Etsy shop</a>
+          <a class="btn" href="#" data-email>Email us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>&copy; <span data-year></span> Patches. Photography &amp; woodwork, made by hand.</span>
+      <nav>
+        <a href="#" data-etsy target="_blank" rel="noopener">Etsy</a>
+        <a href="#" data-instagram target="_blank" rel="noopener">Instagram</a>
+        <a href="#" data-email>Email</a>
+      </nav>
+    </div>
+  </footer>
+
+  <dialog id="detail">
+    <div class="d-inner">
+      <img class="d-img" src="" alt="">
+      <div class="d-info">
+        <button class="d-close" aria-label="Close">&times;</button>
+        <span class="d-craft"></span>
+        <h2 class="d-title"></h2>
+        <div class="d-price"></div>
+        <p class="d-desc"></p>
+        <ul class="d-details"></ul>
+        <div class="d-actions">
+          <a class="btn btn-primary d-buy" href="#" target="_blank" rel="noopener">View on Etsy</a>
+          <a class="btn d-ask" href="#">Ask a question</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="js/works.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
