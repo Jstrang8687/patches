@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="2" y="2" width="13" height="13" rx="2" fill="#a94f2b"/><rect x="17" y="2" width="13" height="13" rx="2" fill="#6f7d5c"/><rect x="2" y="17" width="13" height="13" rx="2" fill="#c9a77c"/><rect x="17" y="17" width="13" height="13" rx="2" fill="#2b2622"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <clipPath id="L"><rect width="60" height="120"/></clipPath><clipPath id="R"><rect x="60" width="60" height="120"/></clipPath>
+  <g clip-path="url(#L)"><circle cx="60" cy="60" r="56" fill="#c9a77c"/>
+    <g fill="none" stroke="#7a5230" stroke-width="5"><circle cx="60" cy="60" r="14"/><circle cx="60" cy="60" r="30"/><circle cx="60" cy="60" r="46"/></g></g>
+  <g clip-path="url(#R)"><circle cx="60" cy="60" r="56" fill="#2b2622"/></g>
+  <text x="87" y="68" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="19" fill="#f6f1e9">JPS</text>
+  <rect x="70" y="76" width="34" height="5" rx="2.5" fill="#c9a77c"/>
+</svg>

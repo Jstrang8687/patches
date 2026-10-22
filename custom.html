@@ -8,13 +8,19 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="site-header">
     <div class="wrap">
-      <a class="logo" href="index.html"><img src="favicon.svg" alt="" width="28" height="28">Patches</a>
+      <a class="logo" href="index.html">
+        <svg class="logo-badge" viewBox="0 0 220 140" role="img" aria-label="Patches">
+          <rect x="4" y="4" width="212" height="132" rx="28" fill="#a94f2b"/>
+          <rect x="14" y="14" width="192" height="112" rx="20" fill="none" stroke="#f6f1e9" stroke-width="4" stroke-dasharray="9 7"/>
+          <text x="110" y="88" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="52" fill="#f6f1e9">Patches</text>
+        </svg>
+      </a>
       <button class="nav-toggle" aria-label="Menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
       <nav class="nav">
         <a href="photography.html">Photography</a>
@@ -74,7 +80,19 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <span>&copy; <span data-year></span> Patches. Photography &amp; woodwork, made by hand.</span>
+      <span class="maker">
+        <svg class="brand-mark" viewBox="0 0 120 120" aria-hidden="true">
+          <clipPath id="bmL"><rect width="60" height="120"/></clipPath><clipPath id="bmR"><rect x="60" width="60" height="120"/></clipPath>
+          <g clip-path="url(#bmL)"><circle cx="60" cy="60" r="54" fill="#c9a77c"/>
+            <g fill="none" stroke="#7a5230" stroke-width="2.4"><circle cx="62" cy="58" r="8"/><circle cx="61" cy="59" r="17"/><path d="M60 33 a27 26 0 1 0 0 53"/><circle cx="60" cy="60" r="37"/><circle cx="60" cy="60" r="46"/></g></g>
+          <g clip-path="url(#bmR)"><circle cx="60" cy="60" r="54" fill="#2b2622"/></g>
+          <text x="87" y="66" text-anchor="middle" font-family="'Alfa Slab One', serif" font-size="17" fill="#f6f1e9">JPS</text>
+          <rect x="70" y="73" width="34" height="4" rx="2" fill="#c9a77c"/>
+          <circle cx="60" cy="60" r="54" fill="none" stroke="#2b2622" stroke-width="3"/>
+          <line x1="60" y1="6" x2="60" y2="114" stroke="#f6f1e9" stroke-width="2" stroke-dasharray="4 4"/>
+        </svg>
+        <span>&copy; <span data-year></span> Patches. Photography &amp; woodwork, made by hand.</span>
+      </span>
       <nav>
         <a href="custom.html">Custom orders</a>
         <a href="#" data-etsy target="_blank" rel="noopener">Etsy</a>
