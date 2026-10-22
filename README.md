@@ -2,6 +2,8 @@
 
 A portfolio site for Patches: photography and woodworking. Each piece links to Etsy for checkout.
 
+**Live site:** https://jstrang8687.github.io/patches/
+
 Plain HTML, CSS and JavaScript. No build step, nothing to install.
 
 ```
@@ -43,13 +45,13 @@ Then open http://localhost:8080.
 
 ## Publishing with GitHub Pages
 
-Once the repo is on GitHub, go to **Settings → Pages**. Under "Build and deployment", choose **Deploy from a branch**, branch `main`, folder `/ (root)`, and save. The site goes live at `https://<username>.github.io/<repo-name>/` within a minute or two. After that, every push to `main` updates it.
+GitHub Pages is already turned on for this repo, serving the `main` branch from the root folder. Every push to `main` updates the live site within a minute or two.
 
-## Using your GoDaddy domain
+## Using your GoDaddy domain (once you buy one)
 
 1. In the GitHub repo, go to **Settings → Pages → Custom domain**, enter the domain (e.g. `www.yourdomain.com`), and save. GitHub adds a `CNAME` file to the repo.
 2. In GoDaddy, open **My Products → the domain → DNS**, and add these records:
-   - **CNAME**: name `www`, value `<username>.github.io`
+   - **CNAME**: name `www`, value `jstrang8687.github.io`
    - **A** records for name `@`, one for each of these four values: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
    - Remove any existing `@` A record that points to GoDaddy "parking" or forwarding.
 3. Wait for DNS to update. This can take from a few minutes to a few hours. Then go back to **Settings → Pages** and tick **Enforce HTTPS**.
