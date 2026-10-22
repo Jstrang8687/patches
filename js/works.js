@@ -1,5 +1,5 @@
 // ============================================================
-//  PATCHES: site settings and the list of pieces for sale.
+//  PATCHES: site settings and the list of pieces.
 //  This is the only file you need to edit to add, change, or
 //  mark work as sold. See README.md for step-by-step help.
 // ============================================================
@@ -12,115 +12,132 @@ window.PATCHES = {
     instagram: "",                               // optional, e.g. "https://instagram.com/patches"
   },
 
+  // Ways a photo can be ordered. Shown on the Photography page and in
+  // each photo's popup. "layout" picks the little diagram:
+  //   "single", "large", "triptych" (one photo split across 3 panels),
+  //   or "set" (3 different photos hung together).
+  printFormats: [
+    { id: "print", layout: "single", name: "Classic Print",
+      sizes: "8×10 to 16×20 in", from: 45,
+      blurb: "Archival paper print, signed. Ready for your own frame." },
+    { id: "large", layout: "large", name: "Large Statement Piece",
+      sizes: "24×36 to 40×60 in", from: 250,
+      blurb: "Big canvas or metal print that anchors a whole wall." },
+    { id: "triptych", layout: "triptych", name: "3-Piece Split",
+      sizes: "3 panels, 36×24 to 72×36 in overall", from: 300,
+      blurb: "One photo split across three panels, hung side by side." },
+    { id: "set", layout: "set", name: "Gallery Set of 3",
+      sizes: "3 matching prints, 11×14 or 16×20 in", from: 150,
+      blurb: "Three related photos in the same size and finish." },
+  ],
+
   // Each piece:
   //   id          unique short name, no spaces
   //   craft       "photography" or "woodworking"
+  //   category    group used for the filter buttons, e.g. "Wildlife", "Wands"
   //   title       name of the piece
   //   price       number in dollars (leave out to show "Inquire")
-  //   status      "available" or "sold"
+  //   status      "available", "sold", or "commission" (made for a client,
+  //               shown as past work with a "Request something similar" button)
   //   featured    true to show it on the home page
-  //   image       path to the photo, e.g. "images/photography/lake.jpg"
+  //   image       path to the photo, e.g. "images/photography/fox.jpg"
+  //               (leave "" to show a "photo coming soon" tile)
   //   description a sentence or two
   //   details     list of short facts (size, material, print type...)
   //   etsy        link to this piece's Etsy listing
   works: [
-    // ---------- Photography (placeholders) ----------
+    // ---------- Photography: animals (placeholders) ----------
     {
-      id: "morning-fog", craft: "photography", title: "Morning Fog",
-      price: 85, status: "available", featured: true,
-      image: "https://picsum.photos/seed/patches-fog/1200/900",
-      description: "Low fog lifting off the water just after sunrise.",
-      details: ["Archival matte print", "12 × 16 in", "Signed, limited run of 25"],
+      id: "red-fox", craft: "photography", category: "Wildlife", title: "Red Fox in Snow",
+      price: 85, status: "available", featured: true, image: "",
+      description: "A red fox pausing mid-hunt in fresh snow.",
+      details: ["Signed archival print", "Available in every format below"],
       etsy: "",
     },
     {
-      id: "old-barn", craft: "photography", title: "Old Barn, Late Light",
-      price: 120, status: "available",
-      image: "https://picsum.photos/seed/patches-barn/1200/1500",
-      description: "Last light on weathered boards, shot on a back road in October.",
-      details: ["Lustre print", "16 × 20 in", "Ships rolled in a tube"],
+      id: "owl", craft: "photography", category: "Birds", title: "Great Horned Owl",
+      price: 85, status: "available", featured: true, image: "",
+      description: "Eye contact from a great horned owl at dusk.",
+      details: ["Signed archival print", "Popular as a 3-piece split"],
       etsy: "",
     },
     {
-      id: "river-stones", craft: "photography", title: "River Stones",
-      price: 65, status: "sold",
-      image: "https://picsum.photos/seed/patches-stones/1200/800",
-      description: "Smooth stones under clear, moving water.",
-      details: ["Archival matte print", "8 × 12 in"],
+      id: "buck", craft: "photography", category: "Wildlife", title: "Whitetail at Dawn",
+      price: 95, status: "available", image: "",
+      description: "A whitetail buck in the first light of morning.",
+      details: ["Signed archival print"],
       etsy: "",
     },
     {
-      id: "pines", craft: "photography", title: "Pines in Snow",
-      price: 95, status: "available",
-      image: "https://picsum.photos/seed/patches-pines/1200/1200",
-      description: "A quiet stand of pines after the first heavy snow.",
-      details: ["Metal print", "12 × 12 in", "Ready to hang"],
+      id: "heron", craft: "photography", category: "Birds", title: "Heron on the Water",
+      price: 75, status: "available", image: "",
+      description: "A great blue heron standing still in shallow water.",
+      details: ["Signed archival print"],
       etsy: "",
     },
     {
-      id: "city-rain", craft: "photography", title: "City Rain",
-      price: 75, status: "available",
-      image: "https://picsum.photos/seed/patches-rain/1200/900",
-      description: "Streetlights reflected on wet pavement.",
-      details: ["Archival matte print", "11 × 14 in"],
+      id: "black-bear", craft: "photography", category: "Wildlife", title: "Black Bear",
+      price: 95, status: "sold", image: "",
+      description: "A black bear crossing an open meadow.",
+      details: ["Original print sold; other formats available"],
       etsy: "",
     },
     {
-      id: "wildflowers", craft: "photography", title: "Wildflowers",
-      price: 70, status: "available",
-      image: "https://picsum.photos/seed/patches-flowers/1200/1500",
-      description: "A summer field, close to the ground.",
-      details: ["Lustre print", "11 × 14 in"],
+      id: "barn-cat", craft: "photography", category: "Farm & Pets", title: "Barn Cat",
+      price: 65, status: "available", image: "",
+      description: "The barn's resident mouser, caught in a patch of sun.",
+      details: ["Signed archival print"],
       etsy: "",
     },
 
     // ---------- Woodworking (placeholders) ----------
     {
-      id: "walnut-board", craft: "woodworking", title: "Walnut End-Grain Cutting Board",
-      price: 180, status: "available", featured: true,
-      image: "https://picsum.photos/seed/patches-walnut/1200/900",
+      id: "restaurant-tables", craft: "woodworking", category: "Tables & Benches",
+      title: "Restaurant Dining Tables", status: "commission", featured: true, image: "",
+      description: "A full set of solid hardwood dining tables built for a local restaurant.",
+      details: ["Commissioned project", "Built to fit the dining room", "Commercial-grade finish"],
+      etsy: "",
+    },
+    {
+      id: "restaurant-benches", craft: "woodworking", category: "Tables & Benches",
+      title: "Restaurant Bench Seating", status: "commission", image: "",
+      description: "Matching benches built alongside the dining tables.",
+      details: ["Commissioned project", "Solid hardwood"],
+      etsy: "",
+    },
+    {
+      id: "walnut-board", craft: "woodworking", category: "Cutting Boards",
+      title: "Walnut End-Grain Cutting Board", price: 180, status: "available", featured: true, image: "",
       description: "Heavy end-grain board in black walnut, finished with food-safe oil and beeswax.",
       details: ["Black walnut", "18 × 12 × 1.75 in", "Rubber feet", "One of a kind"],
       etsy: "",
     },
     {
-      id: "maple-bowl", craft: "woodworking", title: "Turned Maple Bowl",
-      price: 140, status: "available", featured: true,
-      image: "https://picsum.photos/seed/patches-bowl/1200/1200",
-      description: "Hand-turned from a single piece of spalted maple.",
-      details: ["Spalted maple", "10 in diameter", "Decorative use"],
+      id: "maple-cherry-board", craft: "woodworking", category: "Cutting Boards",
+      title: "Maple & Cherry Edge-Grain Board", price: 95, status: "available", image: "",
+      description: "Everyday board with alternating maple and cherry strips.",
+      details: ["Maple and cherry", "16 × 10 × 1 in", "Food-safe finish"],
       etsy: "",
     },
     {
-      id: "oak-shelf", craft: "woodworking", title: "Floating Oak Shelf",
-      price: 95, status: "available",
-      image: "https://picsum.photos/seed/patches-shelf/1200/800",
-      description: "Clean, simple shelf with hidden mounting hardware.",
-      details: ["White oak", "36 × 8 in", "Hardware included"],
+      id: "charcuterie", craft: "woodworking", category: "Cutting Boards",
+      title: "Charcuterie Serving Board", price: 75, status: "sold", image: "",
+      description: "Long serving board with a carved handle.",
+      details: ["Walnut", "24 × 8 in"],
       etsy: "",
     },
     {
-      id: "cherry-box", craft: "woodworking", title: "Cherry Keepsake Box",
-      price: 110, status: "sold",
-      image: "https://picsum.photos/seed/patches-box/1200/1200",
-      description: "Small box with hand-cut dovetails and a fitted lid.",
-      details: ["Cherry and maple", "8 × 5 × 4 in"],
+      id: "wand-elder", craft: "woodworking", category: "Wands",
+      title: "Hand-Carved Wizard Wand", price: 45, status: "available", featured: true, image: "",
+      description: "Hand-carved and turned wand with a knotted handle.",
+      details: ["Hardwood", "About 14 in", "Gift box included"],
       etsy: "",
     },
     {
-      id: "side-table", craft: "woodworking", title: "Live-Edge Side Table",
-      price: 450, status: "available",
-      image: "https://picsum.photos/seed/patches-table/1200/1500",
-      description: "Live-edge slab top on a minimal steel base.",
-      details: ["Ash slab, steel base", "22 × 16 × 24 in", "Local pickup or freight"],
-      etsy: "",
-    },
-    {
-      id: "coasters", craft: "woodworking", title: "Mixed Hardwood Coasters (Set of 4)",
-      price: 40, status: "available",
-      image: "https://picsum.photos/seed/patches-coasters/1200/900",
-      description: "Offcuts from bigger projects, given a second life.",
-      details: ["Walnut, maple, cherry", "4 in square", "Sealed for moisture"],
+      id: "wand-spiral", craft: "woodworking", category: "Wands",
+      title: "Spiral Wand", price: 40, status: "available", image: "",
+      description: "Twisting spiral carved down the length of the shaft.",
+      details: ["Cherry", "About 13 in"],
       etsy: "",
     },
   ],

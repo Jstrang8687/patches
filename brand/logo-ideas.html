@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patches Logo Ideas</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#f6f1e9; --surface:#fffdf9; --ink:#2b2622; --muted:#6e655c; --line:#e2d8ca;
+            --rust:#a94f2b; --sage:#6f7d5c; --tan:#c9a77c; --cream:#f6f1e9; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 Inter, system-ui, sans-serif; }
+    .wrap { max-width:1120px; margin:0 auto; padding:48px 16px 80px; }
+    h1 { font:600 clamp(2rem,5vw,3rem)/1.1 Fraunces, Georgia, serif; margin:0 0 8px; }
+    h2 { font:600 1.4rem/1.2 Fraunces, Georgia, serif; margin:0; }
+    .lede { color:var(--muted); max-width:640px; margin:0 0 40px; }
+    .grid { display:grid; gap:24px; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); }
+    .idea { background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; }
+    .stage { display:grid; grid-template-columns:1fr 1fr; }
+    .stage > div { aspect-ratio:1; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .light { background:var(--cream); }
+    .dark { background:var(--ink); }
+    .stage svg { width:100%; height:auto; max-height:100%; }
+    .info { padding:20px; display:grid; gap:8px; flex:1; }
+    .num { font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sage); font-weight:600; }
+    .info p { margin:0; color:var(--muted); font-size:.95rem; }
+    .small { display:flex; align-items:center; gap:12px; margin-top:auto; padding-top:12px; border-top:1px solid var(--line);
+             font-size:.82rem; color:var(--muted); }
+    .small svg { width:32px; height:32px; }
+    .small .tab { display:flex; align-items:center; gap:6px; background:#e9e2d6; border-radius:6px 6px 0 0; padding:4px 10px; color:var(--ink); }
+    .small .tab svg { width:16px; height:16px; }
+    .note { margin-top:40px; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:24px; }
+    .note ul { margin:8px 0 0; padding-left:20px; color:var(--muted); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <span class="num">Brand · first sketches</span>
+  <h1>Patches logo ideas</h1>
+  <p class="lede">Six directions to react to. These are rough starting points, not final art. Each one is shown on light and dark backgrounds, and at the tiny size used for browser tabs and Etsy shop icons. Pick favorites, mix pieces together, or toss them all if your brother has his own design.</p>
+
+  <!-- Reusable marks -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <!-- 1. Quilt -->
+      <symbol id="quilt" viewBox="0 0 120 120">
+        <rect x="4" y="4" width="54" height="54" rx="6" fill="#a94f2b"/>
+        <rect x="62" y="4" width="54" height="54" rx="6" fill="#6f7d5c"/>
+        <rect x="4" y="62" width="54" height="54" rx="6" fill="#c9a77c"/>
+        <rect x="62" y="62" width="54" height="54" rx="6" fill="currentColor"/>
+        <g fill="none" stroke="#f6f1e9" stroke-opacity=".7" stroke-width="2" stroke-dasharray="4 4">
+          <rect x="10" y="10" width="42" height="42" rx="3"/><rect x="68" y="10" width="42" height="42" rx="3"/>
+          <rect x="10" y="68" width="42" height="42" rx="3"/><rect x="68" y="68" width="42" height="42" rx="3"/>
+        </g>
+        <!-- aperture in one square, growth rings in another -->
+        <g transform="translate(89 89)" fill="none" stroke="#f6f1e9" stroke-width="2.5">
+          <circle r="13"/><path d="M-6 -11 L6 11 M6 -11 L-6 11 M-13 0 L13 0"/>
+        </g>
+        <g transform="translate(31 89)" fill="none" stroke="#7a5230" stroke-width="2">
+          <circle r="4"/><circle r="9"/><circle r="14"/>
+        </g>
+      </symbol>
+
+      <!-- 2. Sewn patch badge -->
+      <symbol id="badge" viewBox="0 0 220 140">
+        <rect x="4" y="4" width="212" height="132" rx="28" fill="#a94f2b"/>
+        <rect x="14" y="14" width="192" height="112" rx="20" fill="none" stroke="#f6f1e9" stroke-width="3" stroke-dasharray="8 6"/>
+        <path d="M40 88 L72 56 L92 74 L116 46 L150 88 Z" fill="#f6f1e9" fill-opacity=".22"/>
+        <text x="110" y="82" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="40" fill="#f6f1e9">Patches</text>
+        <text x="110" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="11" letter-spacing="4" fill="#f6f1e9" fill-opacity=".85">PHOTO · WOOD</text>
+      </symbol>
+
+      <!-- 3. Aperture + growth rings -->
+      <clipPath id="leftHalf"><rect x="0" y="0" width="60" height="120"/></clipPath>
+      <clipPath id="rightHalf"><rect x="60" y="0" width="60" height="120"/></clipPath>
+      <clipPath id="disc"><circle cx="60" cy="60" r="54"/></clipPath>
+      <symbol id="split" viewBox="0 0 120 120">
+        <g clip-path="url(#leftHalf)">
+          <circle cx="60" cy="60" r="54" fill="#c9a77c"/>
+          <g fill="none" stroke="#7a5230" stroke-width="2.4">
+            <circle cx="62" cy="58" r="8"/><circle cx="61" cy="59" r="17"/><path d="M60 33 a27 26 0 1 0 0 53"/>
+            <circle cx="60" cy="60" r="37"/><circle cx="60" cy="60" r="46"/>
+          </g>
+        </g>
+        <g clip-path="url(#rightHalf)">
+          <circle cx="60" cy="60" r="54" fill="currentColor"/>
+          <g clip-path="url(#disc)" fill="none" stroke="#f6f1e9" stroke-width="2.6" stroke-linecap="round">
+            <path d="M74 60 L67 72.1 L53 72.1 L46 60 L53 47.9 L67 47.9 Z"/>
+            <path d="M67 72.1 L37 124"/><path d="M53 47.9 L83 -4"/>
+            <path d="M67 47.9 L127 47.9"/><path d="M74 60 L104 112"/>
+          </g>
+        </g>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="3"/>
+        <line x1="60" y1="6" x2="60" y2="114" stroke="#f6f1e9" stroke-width="2" stroke-dasharray="4 4"/>
+      </symbol>
+
+      <!-- 4. Patchwork fox -->
+      <symbol id="fox" viewBox="0 0 120 120">
+        <g stroke="#2b2622" stroke-opacity=".15" stroke-width=".8" stroke-linejoin="round">
+          <polygon points="30,12 20,52 50,42" fill="#8e3f20"/>
+          <polygon points="90,12 100,52 70,42" fill="#8e3f20"/>
+          <polygon points="31,22 25,46 42,41" fill="#2b2622" fill-opacity=".55"/>
+          <polygon points="89,22 95,46 78,41" fill="#2b2622" fill-opacity=".55"/>
+          <polygon points="50,42 70,42 60,66" fill="#c0643a"/>
+          <polygon points="20,52 50,42 60,66" fill="#a94f2b"/>
+          <polygon points="100,52 70,42 60,66" fill="#b85a33"/>
+          <polygon points="20,52 8,66 44,78" fill="#f2e6d6"/>
+          <polygon points="20,52 60,66 44,78" fill="#e8d8c2"/>
+          <polygon points="100,52 112,66 76,78" fill="#ede0cc"/>
+          <polygon points="100,52 60,66 76,78" fill="#f2e6d6"/>
+          <polygon points="44,78 60,66 76,78" fill="#d9c4a6"/>
+          <polygon points="44,78 76,78 60,108" fill="#f6f1e9"/>
+        </g>
+        <polygon points="54,100 66,100 60,109" fill="#2b2622"/>
+        <ellipse cx="44" cy="58" rx="3.2" ry="4" fill="#2b2622"/>
+        <ellipse cx="76" cy="58" rx="3.2" ry="4" fill="#2b2622"/>
+      </symbol>
+
+      <!-- 5. Maker's stamp -->
+      <path id="ring" d="M60 60 m-41 0 a41 41 0 1 1 82 0 a41 41 0 1 1 -82 0"/>
+      <symbol id="stamp" viewBox="0 0 120 120">
+        <g fill="none" stroke="currentColor">
+          <circle cx="60" cy="60" r="56" stroke-width="3"/>
+          <circle cx="60" cy="60" r="30" stroke-width="1.5"/>
+        </g>
+        <text font-family="Inter, sans-serif" font-weight="600" font-size="10.5" letter-spacing="3.2" fill="currentColor">
+          <textPath href="#ring">PATCHES · HANDMADE · PHOTO &amp; WOOD ·</textPath>
+        </text>
+        <text x="60" y="72" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="34" fill="currentColor">P</text>
+        <circle cx="34" cy="60" r="1.6" fill="currentColor"/><circle cx="86" cy="60" r="1.6" fill="currentColor"/>
+      </symbol>
+
+      <!-- 6. Patch-eyed pup -->
+      <symbol id="pup" viewBox="0 0 120 120">
+        <ellipse cx="25" cy="52" rx="15" ry="27" transform="rotate(18 25 52)" fill="#7a5230"/>
+        <ellipse cx="95" cy="52" rx="15" ry="27" transform="rotate(-18 95 52)" fill="#7a5230"/>
+        <ellipse cx="60" cy="62" rx="36" ry="40" fill="#f2e6d6"/>
+        <path d="M60 22 C 40 22 30 38 32 52 C 34 64 50 68 58 60 C 64 52 62 34 60 22 Z" fill="#a94f2b"/>
+        <path d="M33 50 Q 46 45 59 50" fill="none" stroke="#2b2622" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="46" cy="55" r="4.5" fill="#2b2622"/>
+        <circle cx="74" cy="55" r="4.5" fill="#2b2622"/>
+        <circle cx="47.5" cy="53.5" r="1.3" fill="#fff"/><circle cx="75.5" cy="53.5" r="1.3" fill="#fff"/>
+        <ellipse cx="60" cy="80" rx="15" ry="12" fill="#e8d8c2"/>
+        <path d="M53 74 Q60 70 67 74 Q66 80 60 82 Q54 80 53 74 Z" fill="#2b2622"/>
+        <path d="M60 82 L60 88 M52 90 Q60 95 68 90" fill="none" stroke="#2b2622" stroke-width="2" stroke-linecap="round"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="grid">
+    <article class="idea">
+      <div class="stage">
+        <div class="light" style="color:#2b2622"><svg viewBox="0 0 120 120"><use href="#quilt"/></svg></div>
+        <div class="dark" style="color:#4a423b"><svg viewBox="0 0 120 120"><use href="#quilt"/></svg></div>
+      </div>
+      <div class="info">
+        <span class="num">Idea 1</span><h2>Quilt Squares</h2>
+        <p>Four sewn patches in the site's colors, one with a camera aperture and one with tree rings. It builds on the icon the site uses now, and it's easy to print on stickers, tags and boxes.</p>
+        <div class="small"><svg viewBox="0 0 120 120" style="color:#2b2622"><use href="#quilt"/></svg><span class="tab"><svg viewBox="0 0 120 120" style="color:#2b2622"><use href="#quilt"/></svg>Patches</span>icon sizes</div>
+      </div>
+    </article>
+
+    <article class="idea">
+      <div class="stage">
+        <div class="light"><svg viewBox="0 0 220 140"><use href="#badge"/></svg></div>
+        <div class="dark"><svg viewBox="0 0 220 140"><use href="#badge"/></svg></div>
+      </div>
+      <div class="info">
+        <span class="num">Idea 2</span><h2>Sewn-On Patch</h2>
+        <p>Plays straight on the name: a stitched outdoor patch, like a merit badge or trail patch, with faint mountains. It could become a real embroidered patch for hats, jackets and aprons.</p>
+        <div class="small"><svg viewBox="0 0 220 140" style="width:50px"><use href="#badge"/></svg>gets hard to read when tiny, so it needs a simpler icon version</div>
+      </div>
+    </article>
+
+    <article class="idea">
+      <div class="stage">
+        <div class="light" style="color:#2b2622"><svg viewBox="0 0 120 120"><use href="#split"/></svg></div>
+        <div class="dark" style="color:#4a423b"><svg viewBox="0 0 120 120"><use href="#split"/></svg></div>
+      </div>
+      <div class="info">
+        <span class="num">Idea 3</span><h2>Lens &amp; Grain</h2>
+        <p>One circle stitched together from two halves: tree growth rings on the left, a camera aperture on the right. It tells both crafts in a single mark.</p>
+        <div class="small"><svg viewBox="0 0 120 120" style="color:#2b2622"><use href="#split"/></svg><span class="tab"><svg viewBox="0 0 120 120" style="color:#2b2622"><use href="#split"/></svg>Patches</span>icon sizes</div>
+      </div>
+    </article>
+
+    <article class="idea">
+      <div class="stage">
+        <div class="light"><svg viewBox="0 0 120 120"><use href="#fox"/></svg></div>
+        <div class="dark"><svg viewBox="0 0 120 120"><use href="#fox"/></svg></div>
+      </div>
+      <div class="info">
+        <span class="num">Idea 4</span><h2>Patchwork Fox</h2>
+        <p>A fox face pieced together from patches, nodding to the wildlife photography. It's friendly and memorable, and it works as a mascot. You could swap in a different animal he photographs often.</p>
+        <div class="small"><svg viewBox="0 0 120 120"><use href="#fox"/></svg><span class="tab"><svg viewBox="0 0 120 120"><use href="#fox"/></svg>Patches</span>icon sizes</div>
+      </div>
+    </article>
+
+    <article class="idea">
+      <div class="stage">
+        <div class="light" style="color:#2b2622"><svg viewBox="0 0 120 120"><use href="#stamp"/></svg></div>
+        <div class="dark" style="color:#f6f1e9"><svg viewBox="0 0 120 120"><use href="#stamp"/></svg></div>
+      </div>
+      <div class="info">
+        <span class="num">Idea 5</span><h2>Maker's Stamp</h2>
+        <p>A one-color round stamp, made to be practical. It can be turned into a branding iron to burn into cutting boards, wands and tables, and used as a signature stamp on the back of prints.</p>
+        <div class="small"><svg viewBox="0 0 120 120" style="color:#2b2622"><use href="#stamp"/></svg><span class="tab"><svg viewBox="0 0 120 120" style="color:#2b2622"><use href="#stamp"/></svg>Patches</span>the text disappears when tiny, so the "P" carries it</div>
+      </div>
+    </article>
+
+    <article class="idea">
+      <div class="stage">
+        <div class="light"><svg viewBox="0 0 120 120"><use href="#pup"/></svg></div>
+        <div class="dark"><svg viewBox="0 0 120 120"><use href="#pup"/></svg></div>
+      </div>
+      <div class="info">
+        <span class="num">Idea 6</span><h2>Patch the Pup</h2>
+        <p>A dog with a patch over one eye. If "Patches" is named after a real pet, this makes the story part of the brand. It could be redrawn from a photo of the actual animal.</p>
+        <div class="small"><svg viewBox="0 0 120 120"><use href="#pup"/></svg><span class="tab"><svg viewBox="0 0 120 120"><use href="#pup"/></svg>Patches</span>icon sizes</div>
+      </div>
+    </article>
+  </div>
+
+  <div class="note">
+    <h2>How to use this</h2>
+    <ul>
+      <li>These are quick sketches to find a direction. Once you pick one, it's worth having it cleaned up, either by your brother or by a designer.</li>
+      <li>A good brand usually needs two versions: a full logo (like the badge) and a tiny icon (like the quilt or the stamp's "P").</li>
+      <li>Think about where it'll appear most: the Etsy shop icon, branding on the wood, and stickers on print packaging.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

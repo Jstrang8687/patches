@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom Orders | Patches</title>
+  <meta name="description" content="Request a custom print size, a cutting board, a wand, or furniture from Patches.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="index.html"><img src="favicon.svg" alt="" width="28" height="28">Patches</a>
+      <button class="nav-toggle" aria-label="Menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <nav class="nav">
+        <a href="photography.html">Photography</a>
+        <a href="woodworking.html">Woodworking</a>
+        <a href="custom.html" aria-current="page">Custom Orders</a>
+        <a href="about.html">About</a>
+        <a href="#" data-etsy target="_blank" rel="noopener">Shop on Etsy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap custom">
+      <div>
+        <span class="eyebrow">Custom Orders</span>
+        <h1>Made for you</h1>
+        <p>Want a photo in a different size or format, or a piece of woodwork built to order? Tell us what you have in mind and we'll get back to you with ideas and a quote.</p>
+        <ul class="custom-ideas">
+          <li><strong>Prints in any format</strong>A favorite photo as a large statement piece, a 3-piece split, or a gallery set of three.</li>
+          <li><strong>Tables &amp; benches</strong>Dining tables, benches, and seating for homes and restaurants, built to your space.</li>
+          <li><strong>Cutting boards</strong>Custom sizes and wood combinations. Great gifts for weddings and housewarmings.</li>
+          <li><strong>Wands</strong>Hand-carved wands in your choice of wood and style.</li>
+        </ul>
+      </div>
+      <form class="form" id="custom-form">
+        <div class="row">
+          <label>Your name<input name="name" required autocomplete="name"></label>
+          <label>Your email<input name="email" type="email" required autocomplete="email"></label>
+        </div>
+        <label>What are you looking for?
+          <select name="type">
+            <option value="print">A photo print in a custom size or format</option>
+            <option value="woodworking">Furniture: a table, bench, or seating</option>
+            <option value="board">A custom cutting board</option>
+            <option value="wand">A custom wand</option>
+            <option value="other">Something else</option>
+          </select>
+        </label>
+        <label data-show-for="print">Print format<select name="format"></select></label>
+        <label>Related piece (optional)<input name="piece" placeholder="e.g. Red Fox in Snow"></label>
+        <div class="row">
+          <label>Budget (optional)
+            <select name="budget">
+              <option value="">Not sure yet</option>
+              <option>Under $100</option><option>$100 to $250</option><option>$250 to $500</option>
+              <option>$500 to $1,000</option><option>Over $1,000</option>
+            </select>
+          </label>
+          <label>Needed by (optional)<input name="timeline" placeholder="e.g. by Christmas"></label>
+        </div>
+        <label>Tell us about it<textarea name="details" required placeholder="Size, wood, colors, where it will go, who it's for..."></textarea></label>
+        <button class="btn btn-primary" type="submit">Send inquiry</button>
+        <p class="form-note">This opens your email app with your message filled in. Just hit send. Didn't open? Email <a href="#" data-email="show"></a>.</p>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>&copy; <span data-year></span> Patches. Photography &amp; woodwork, made by hand.</span>
+      <nav>
+        <a href="custom.html">Custom orders</a>
+        <a href="#" data-etsy target="_blank" rel="noopener">Etsy</a>
+        <a href="#" data-instagram target="_blank" rel="noopener">Instagram</a>
+        <a href="#" data-email>Email</a>
+      </nav>
+    </div>
+  </footer>
+
+  <dialog id="detail">
+    <div class="d-inner">
+      <img class="d-img" src="" alt="">
+      <div class="d-info">
+        <button class="d-close" aria-label="Close">&times;</button>
+        <span class="d-craft"></span>
+        <h2 class="d-title"></h2>
+        <div class="d-price"></div>
+        <p class="d-desc"></p>
+        <ul class="d-details"></ul>
+        <div class="d-formats"><strong>Also available as</strong><ul></ul></div>
+        <div class="d-actions">
+          <a class="btn btn-primary d-buy" href="#" target="_blank" rel="noopener">View on Etsy</a>
+          <a class="btn d-ask" href="#">Ask a question</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="js/works.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
