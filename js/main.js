@@ -1,11 +1,25 @@
 // Renders galleries, print formats, the piece popup, and the custom order form from works.js.
 (function () {
-  const { config, works, printFormats = [] } = window.PATCHES;
+  const { config, works, printFormats = [], shops = {}, sellOn = {} } = window.PATCHES;
 
   const money = (n) => (typeof n === "number" ? "$" + n.toLocaleString() : "Inquire");
-  const linkFor = (w) => w.etsy || config.etsyShop;
   const customLink = (type, piece) =>
     "custom.html?type=" + encodeURIComponent(type) + (piece ? "&piece=" + encodeURIComponent(piece) : "");
+  const formTypeFor = (w) => w.craft === "photography" ? "print"
+    : ({ "Cutting Boards": "board", "Wands": "wand", "Tables & Benches": "woodworking" })[w.category] || "other";
+
+  // Where a piece's main button goes: its shop (per sellOn rules), or the custom
+  // order form when it's made to order or its shop isn't set up yet.
+  function buyFor(w) {
+    const form = customLink(formTypeFor(w), w.title);
+    if (w.status === "commission") return { href: form, label: "Request something similar" };
+    const channel = w.shop || sellOn[w.category] || sellOn[w.craft] || "custom";
+    if (channel === "custom") return { href: form, label: "Request a quote" };
+    const shop = shops[channel] || {};
+    const url = w.link || shop.url;
+    if (!url) return { href: form, label: w.status === "sold" ? "Ask about similar work" : "Inquire to buy" };
+    return { href: url, external: true, label: (w.status === "sold" ? "See more on " : "Buy on ") + shop.name };
+  }
   const priceLabel = (w) =>
     w.status === "sold" ? "Sold" : w.status === "commission" ? "Commissioned" : money(w.price);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -90,7 +104,6 @@
   const dialog = document.getElementById("detail");
   function openDetail(w) {
     if (!dialog) return;
-    const sold = w.status === "sold";
     const commission = w.status === "commission";
     const isPhoto = w.craft === "photography";
     dialog.querySelector(".d-img").src = imageFor(w);
@@ -107,19 +120,14 @@
 
     const buy = dialog.querySelector(".d-buy");
     const ask = dialog.querySelector(".d-ask");
-    if (commission) {
-      buy.href = customLink("woodworking", w.title);
-      buy.removeAttribute("target");
-      buy.textContent = "Request something similar";
-      ask.hidden = true;
-    } else {
-      buy.href = linkFor(w);
-      buy.target = "_blank";
-      buy.textContent = sold ? "See similar work on Etsy" : "View on Etsy";
-      ask.hidden = false;
-      ask.href = isPhoto ? customLink("print", w.title) : customLink("woodworking", w.title);
-      ask.textContent = isPhoto ? "Order in another format" : "Ask about a custom version";
-    }
+    const b = buyFor(w);
+    buy.href = b.href;
+    buy.textContent = b.label;
+    if (b.external) { buy.target = "_blank"; buy.rel = "noopener"; } else buy.removeAttribute("target");
+    // The second button only shows when the first one leaves the site; otherwise both would open the same form.
+    ask.hidden = commission || !b.external;
+    ask.href = customLink(formTypeFor(w), w.title);
+    ask.textContent = isPhoto ? "Order in another format" : "Ask about a custom version";
     dialog.showModal();
   }
   if (dialog) {
@@ -164,7 +172,25 @@
   }
 
   // Shared links from config
-  document.querySelectorAll("[data-etsy]").forEach((a) => (a.href = config.etsyShop));
+  // Shop links: go to the shop once its url is set. Until then, use data-fallback
+  // (with optional data-fallback-text) if given, or hide the link.
+  document.querySelectorAll("[data-shop]").forEach((a) => {
+    const shop = shops[a.dataset.shop];
+    if (shop && shop.url) {
+      a.href = shop.url;
+      a.target = "_blank";
+      a.rel = "noopener";
+    } else if (a.dataset.fallback) {
+      a.href = a.dataset.fallback;
+      if (a.dataset.fallbackText) a.textContent = a.dataset.fallbackText;
+    } else {
+      a.remove();
+    }
+  });
+  document.querySelectorAll("[data-shop-status]").forEach((s) => {
+    const shop = shops[s.dataset.shopStatus];
+    s.textContent = shop && shop.url ? "Sold on " + shop.name : "Shop coming soon";
+  });
   document.querySelectorAll("[data-email]").forEach((a) => {
     a.href = "mailto:" + config.email;
     if (a.dataset.email === "show") a.textContent = config.email;

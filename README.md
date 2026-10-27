@@ -1,6 +1,6 @@
 # Patches
 
-A portfolio site for Patches: photography and woodworking. Each piece links to Etsy for checkout.
+A portfolio site for Patches: photography and woodworking. Photos link to a print shop, boards and wands link to Etsy, and furniture goes through a custom order form.
 
 **Live site:** https://jstrang8687.github.io/patches/
 
@@ -11,7 +11,9 @@ index.html          Home page
 photography.html    Photography gallery
 woodworking.html    Woodworking gallery
 about.html          About + contact
-js/works.js         <-- settings and every piece for sale (edit this one)
+custom.html         Custom order form
+brand/              Logo ideas (not linked from the site)
+js/works.js         <-- settings, shop links, and every piece (edit this one)
 js/main.js          Draws the galleries and the detail popup
 css/style.css       Colors, fonts, layout
 images/             Put real photos here
@@ -24,14 +26,40 @@ images/             Put real photos here
 3. Change the fields:
    - `id`: a short unique name, like `"walnut-board-2"`
    - `craft`: `"photography"` or `"woodworking"`
+   - `category`: the filter group, e.g. `"Wildlife"`, `"Cutting Boards"`, `"Wands"`, `"Tables & Benches"`
    - `price`: a number, e.g. `120` (delete the line to show "Inquire")
-   - `status`: `"available"` or `"sold"`
+   - `status`: `"available"`, `"sold"`, or `"commission"` (past work made for a client)
    - `featured: true`: also shows the piece on the home page
    - `image`: e.g. `"images/woodworking/walnut-board-2.jpg"`
-   - `etsy`: the piece's Etsy listing URL. If it's blank, the button goes to the main shop.
+   - `link`: this piece's own listing page (its Etsy listing, its Pixieset photo...). If it's blank, the button goes to the shop's main page.
 4. Delete the placeholder pieces once real ones are in.
 
-Also update `config` at the top of `works.js`: the real email, the Etsy shop link, and Instagram if you have one.
+Also update `config` at the top of `works.js` with the real email, and Instagram if you have one.
+
+## Where things are sold
+
+Each kind of piece has its own buy button, set in `works.js`:
+
+| Piece | Sold through | Button |
+|---|---|---|
+| Photos | `shops.prints` (Pixieset, SmugMug...) | "Buy on Pixieset" |
+| Cutting boards, wands | `shops.etsy` | "Buy on Etsy" |
+| Tables & benches | custom order form | "Request a quote" |
+
+**When a shop is ready**, paste its main link into `shops` in `works.js`:
+
+```js
+shops: {
+  prints: { name: "Pixieset", url: "https://patches.pixieset.com/" },
+  etsy:   { name: "Etsy",     url: "https://www.etsy.com/shop/PatchesStudio" },
+},
+```
+
+Until a shop has a `url`, its buttons say **"Inquire to buy"** and open the custom order form for that piece, and its footer link stays hidden. Nothing ever points to a dead page.
+
+- Using SmugMug instead of Pixieset? Just change `name: "Pixieset"` to `name: "SmugMug"`.
+- Want to sell a category somewhere else? Change its line in `sellOn`, e.g. `"Wands": "custom"`.
+- One piece sold somewhere different? Add `shop: "etsy"` (or `"custom"`) to just that piece.
 
 The About page text is in `about.html`, and the home page headline is in `index.html`.
 

@@ -172,3 +172,12 @@ dialog#detail::backdrop { background: rgba(30,26,22,.7); }
 .brand-mark { width: 34px; height: 34px; flex: none; }
 .site-footer .maker { display: flex; align-items: center; gap: 12px; }
 .contact-box .fox { width: 72px; height: 72px; float: right; margin: -8px -4px 0 12px; }
+
+/* ---------- Where to buy ---------- */
+.buy-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.buy-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; }
+.buy-card h3 { font-size: 1.3rem; margin-bottom: 4px; }
+.buy-card p { color: var(--muted); }
+.buy-card .buy-where { font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--sage); font-weight: 600; margin-bottom: 10px; }
+.buy-card .btn { margin-top: auto; align-self: flex-start; }
+#buy { scroll-margin-top: 80px; }

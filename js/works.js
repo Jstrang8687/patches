@@ -8,8 +8,25 @@ window.PATCHES = {
   config: {
     siteName: "Patches",
     email: "hello@example.com",                 // TODO: real contact email
-    etsyShop: "https://www.etsy.com/shop/YOURSHOP", // TODO: real Etsy shop link
     instagram: "",                               // optional, e.g. "https://instagram.com/patches"
+  },
+
+  // Where things are sold. Paste each shop's main link into "url" once it exists.
+  // While a url is empty, buy buttons for that shop say "Inquire to buy" and open
+  // the custom order form instead, so nothing points to a dead page.
+  shops: {
+    prints: { name: "Pixieset", url: "" },  // photo print store: Pixieset, SmugMug, etc. (change the name to match)
+    etsy:   { name: "Etsy",     url: "" },  // e.g. "https://www.etsy.com/shop/PatchesStudio"
+  },
+
+  // Which shop each kind of piece is sold through. Category rules win over craft rules.
+  // "custom" means made to order: the button opens the custom order form.
+  sellOn: {
+    photography: "prints",
+    "Cutting Boards": "etsy",
+    "Wands": "etsy",
+    "Tables & Benches": "custom",
+    woodworking: "etsy",            // anything else in woodworking
   },
 
   // Ways a photo can be ordered. Shown on the Photography page and in
@@ -44,7 +61,8 @@ window.PATCHES = {
   //               (leave "" to show a "photo coming soon" tile)
   //   description a sentence or two
   //   details     list of short facts (size, material, print type...)
-  //   etsy        link to this piece's Etsy listing
+  //   link        this piece's own listing (on Etsy, Pixieset...). Leave "" to use the shop's main page.
+  //   shop        optional: sell this one piece somewhere else, e.g. shop: "etsy" or "custom"
   works: [
     // ---------- Photography: animals (placeholders) ----------
     {
@@ -52,42 +70,42 @@ window.PATCHES = {
       price: 85, status: "available", featured: true, image: "",
       description: "A red fox pausing mid-hunt in fresh snow.",
       details: ["Signed archival print", "Available in every format below"],
-      etsy: "",
+      link: "",
     },
     {
       id: "owl", craft: "photography", category: "Birds", title: "Great Horned Owl",
       price: 85, status: "available", featured: true, image: "",
       description: "Eye contact from a great horned owl at dusk.",
       details: ["Signed archival print", "Popular as a 3-piece split"],
-      etsy: "",
+      link: "",
     },
     {
       id: "buck", craft: "photography", category: "Wildlife", title: "Whitetail at Dawn",
       price: 95, status: "available", image: "",
       description: "A whitetail buck in the first light of morning.",
       details: ["Signed archival print"],
-      etsy: "",
+      link: "",
     },
     {
       id: "heron", craft: "photography", category: "Birds", title: "Heron on the Water",
       price: 75, status: "available", image: "",
       description: "A great blue heron standing still in shallow water.",
       details: ["Signed archival print"],
-      etsy: "",
+      link: "",
     },
     {
       id: "black-bear", craft: "photography", category: "Wildlife", title: "Black Bear",
       price: 95, status: "sold", image: "",
       description: "A black bear crossing an open meadow.",
       details: ["Original print sold; other formats available"],
-      etsy: "",
+      link: "",
     },
     {
       id: "barn-cat", craft: "photography", category: "Farm & Pets", title: "Barn Cat",
       price: 65, status: "available", image: "",
       description: "The barn's resident mouser, caught in a patch of sun.",
       details: ["Signed archival print"],
-      etsy: "",
+      link: "",
     },
 
     // ---------- Woodworking (placeholders) ----------
@@ -96,49 +114,49 @@ window.PATCHES = {
       title: "Restaurant Dining Tables", status: "commission", featured: true, image: "",
       description: "A full set of solid hardwood dining tables built for a local restaurant.",
       details: ["Commissioned project", "Built to fit the dining room", "Commercial-grade finish"],
-      etsy: "",
+      link: "",
     },
     {
       id: "restaurant-benches", craft: "woodworking", category: "Tables & Benches",
       title: "Restaurant Bench Seating", status: "commission", image: "",
       description: "Matching benches built alongside the dining tables.",
       details: ["Commissioned project", "Solid hardwood"],
-      etsy: "",
+      link: "",
     },
     {
       id: "walnut-board", craft: "woodworking", category: "Cutting Boards",
       title: "Walnut End-Grain Cutting Board", price: 180, status: "available", featured: true, image: "",
       description: "Heavy end-grain board in black walnut, finished with food-safe oil and beeswax.",
       details: ["Black walnut", "18 × 12 × 1.75 in", "Rubber feet", "One of a kind"],
-      etsy: "",
+      link: "",
     },
     {
       id: "maple-cherry-board", craft: "woodworking", category: "Cutting Boards",
       title: "Maple & Cherry Edge-Grain Board", price: 95, status: "available", image: "",
       description: "Everyday board with alternating maple and cherry strips.",
       details: ["Maple and cherry", "16 × 10 × 1 in", "Food-safe finish"],
-      etsy: "",
+      link: "",
     },
     {
       id: "charcuterie", craft: "woodworking", category: "Cutting Boards",
       title: "Charcuterie Serving Board", price: 75, status: "sold", image: "",
       description: "Long serving board with a carved handle.",
       details: ["Walnut", "24 × 8 in"],
-      etsy: "",
+      link: "",
     },
     {
       id: "wand-elder", craft: "woodworking", category: "Wands",
       title: "Hand-Carved Wizard Wand", price: 45, status: "available", featured: true, image: "",
       description: "Hand-carved and turned wand with a knotted handle.",
       details: ["Hardwood", "About 14 in", "Gift box included"],
-      etsy: "",
+      link: "",
     },
     {
       id: "wand-spiral", craft: "woodworking", category: "Wands",
       title: "Spiral Wand", price: 40, status: "available", image: "",
       description: "Twisting spiral carved down the length of the shaft.",
       details: ["Cherry", "About 13 in"],
-      etsy: "",
+      link: "",
     },
   ],
 };

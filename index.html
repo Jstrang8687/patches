@@ -27,7 +27,7 @@
         <a href="woodworking.html">Woodworking</a>
         <a href="custom.html">Custom Orders</a>
         <a href="about.html">About</a>
-        <a href="#" data-etsy target="_blank" rel="noopener">Shop on Etsy</a>
+        <a href="index.html#buy">Where to Buy</a>
       </nav>
     </div>
   </header>
@@ -58,7 +58,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2>Featured pieces</h2>
-          <a href="#" data-etsy target="_blank" rel="noopener">See everything on Etsy &rarr;</a>
+          <a href="#buy">Where to buy &rarr;</a>
         </div>
         <div class="grid" data-gallery="featured"></div>
       </div>
@@ -81,15 +81,33 @@
       </div>
     </section>
 
-    <section class="where">
-      <div class="wrap">
-        <div>
-          <h2>Where to buy</h2>
-          <p>Every piece on this site links to its Etsy listing, where checkout and shipping are handled securely. Have a question? Just send an email.</p>
+    <section class="where" id="buy">
+      <div class="wrap" style="display:block">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Where to buy</span>
+            <h2>Every piece has a home</h2>
+          </div>
         </div>
-        <div class="actions" style="display:flex;gap:12px;flex-wrap:wrap">
-          <a class="btn btn-primary" href="#" data-etsy target="_blank" rel="noopener">Visit the Etsy shop</a>
-          <a class="btn" href="#" data-email>Email us</a>
+        <div class="buy-grid">
+          <div class="buy-card">
+            <h3>Photo prints</h3>
+            <p class="buy-where" data-shop-status="prints"></p>
+            <p>Every photo in every format, from classic prints to large statement pieces and 3-piece sets, printed by a professional lab.</p>
+            <a class="btn btn-primary" href="#" data-shop="prints" data-fallback="custom.html?type=print" data-fallback-text="Ask about a print">Shop prints</a>
+          </div>
+          <div class="buy-card">
+            <h3>Cutting boards &amp; wands</h3>
+            <p class="buy-where" data-shop-status="etsy"></p>
+            <p>Ready-to-ship pieces with secure checkout and shipping through Etsy.</p>
+            <a class="btn btn-primary" href="#" data-shop="etsy" data-fallback="custom.html?type=board" data-fallback-text="Ask about a piece">Shop on Etsy</a>
+          </div>
+          <div class="buy-card">
+            <h3>Tables, benches &amp; custom work</h3>
+            <p class="buy-where">Made to order</p>
+            <p>Furniture for homes and restaurants, plus custom boards, wands, and print sizes. Tell us what you need and we'll send a quote.</p>
+            <a class="btn btn-primary" href="custom.html">Start a custom order</a>
+          </div>
         </div>
       </div>
     </section>
@@ -112,7 +130,8 @@
       </span>
       <nav>
         <a href="custom.html">Custom orders</a>
-        <a href="#" data-etsy target="_blank" rel="noopener">Etsy</a>
+        <a href="#" data-shop="prints">Prints</a>
+        <a href="#" data-shop="etsy">Etsy</a>
         <a href="#" data-instagram target="_blank" rel="noopener">Instagram</a>
         <a href="#" data-email>Email</a>
       </nav>
