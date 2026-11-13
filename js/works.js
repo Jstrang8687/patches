@@ -93,7 +93,7 @@ window.PATCHES = {
       "price": 85,
       "status": "available",
       "featured": true,
-      "image": "",
+      "image": "images/photography/red-fox-mwfeg6y4.jpg",
       "description": "A red fox pausing mid-hunt in fresh snow.",
       "details": [
         "Signed archival print",
