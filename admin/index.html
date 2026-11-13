@@ -641,6 +641,11 @@
   // ---- Artwork grid ----
   const craftName = (c) => (c === "photography" ? "Photography" : "Woodworking");
   const imgSrc = (p) => (pendingImages[p] && pendingImages[p].url) || previews[p] || "../" + p;
+  // A just-published photo can take a minute to reach the website; GitHub has it right away.
+  const rawUrl = (p) => `https://raw.githubusercontent.com/${REPO.owner}/${REPO.name}/${REPO.branch}/${p}`;
+  function useFallback(img, p) {
+    img.addEventListener("error", () => { if (p && !img.dataset.triedRaw) { img.dataset.triedRaw = "1"; img.src = rawUrl(p); } });
+  }
   function priceText(w) {
     if (w.status === "sold") return "Sold";
     if (w.status === "commission") return "Commissioned";
@@ -669,6 +674,8 @@
           <button type="button" data-act="delete" class="del">Delete</button>
         </div>`;
       el.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => act(b.dataset.act, w)));
+      const thumb = el.querySelector(".a-thumb img");
+      if (thumb) useFallback(thumb, w.image);
       grid.appendChild(el);
     });
   }
@@ -768,8 +775,13 @@
     const cats = [...new Set(data.works.filter((w) => w.craft === f.craft.value).map((w) => w.category).filter(Boolean))].sort();
     $("#cat-list").innerHTML = cats.map((c) => `<option value="${esc(c)}">`).join("");
   }
-  function setPreview(src, info) {
+  $("#ed-preview").addEventListener("error", (e) => {
+    const p = e.target.dataset.path;
+    if (p && !e.target.src.startsWith("https://raw.")) e.target.src = rawUrl(p);
+  });
+  function setPreview(src, info, path) {
     $("#ed-preview").hidden = !src;
+    $("#ed-preview").dataset.path = path || "";
     if (src) $("#ed-preview").src = src; else $("#ed-preview").removeAttribute("src");
     $("#drop-text").hidden = !!src;
     $("#img-info").textContent = info || "";
@@ -795,7 +807,7 @@
     } else if (craftFilter !== "all") {
       f.craft.value = craftFilter;
     }
-    setPreview(w && w.image ? imgSrc(w.image) : null, w && w.image ? "Click the photo to replace it." : "");
+    setPreview(w && w.image ? imgSrc(w.image) : null, w && w.image ? "Click the photo to replace it." : "", w && w.image);
     updateCategoryList();
     updateShopDefaultLabel();
     dialog.showModal();
