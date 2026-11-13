@@ -120,7 +120,29 @@
   <main class="wrap">
     <section id="login" class="panel login" hidden>
       <h1 style="font-size:2rem">Sign in to manage Patches</h1>
-      <p>This page edits the live site through GitHub. It needs a GitHub access key for the <code>patches</code> repository. You only have to do this once per device.</p>
+      <form id="pw-form" hidden>
+        <label class="field">Username
+          <input id="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+        <label class="field">Password
+          <input id="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+        <p class="a-meta" style="margin-top:12px">Forgot your password? Ask someone who can sign in to remove and re-add you on the People tab.</p>
+      </form>
+      <form id="setup-form" hidden>
+        <p>Welcome! Create the first login. You'll need the setup code you added in Cloudflare.</p>
+        <label class="field">Setup code
+          <input id="setup-code" autocomplete="off" autocapitalize="none" spellcheck="false" required></label>
+        <label class="field">Choose a username <small>Letters and numbers, e.g. jason</small>
+          <input id="setup-user" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+        <label class="field">Choose a password <small>At least 8 characters</small>
+          <input id="setup-pass" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn btn-primary" type="submit">Create login</button>
+      </form>
+      <p class="notice err" id="login-error" hidden style="margin-top:16px"></p>
+
+      <details id="key-login" style="margin-top:24px">
+      <summary style="cursor:pointer;font-weight:600">Use a GitHub access key instead</summary>
+      <p style="margin-top:12px">A GitHub access key for the <code>patches</code> repository also works. You only have to do this once per device.</p>
       <ol>
         <li>Sign in to GitHub, then open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create a new access key</a>.</li>
         <li>Name it <code>Patches admin</code> and pick an expiration (1 year is fine).</li>
@@ -133,9 +155,9 @@
           <input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="github_pat_..." required>
         </label>
         <label class="check"><input type="checkbox" id="remember" checked> Keep me signed in on this device</label>
-        <button class="btn btn-primary" type="submit">Sign in</button>
-        <p class="notice err" id="login-error" hidden style="margin-top:16px"></p>
+        <button class="btn btn-primary" type="submit">Sign in with key</button>
       </form>
+      </details>
     </section>
 
     <section id="loading" hidden><p>Loading…</p></section>
@@ -150,6 +172,7 @@
       <nav class="tabs" role="tablist">
         <button type="button" role="tab" data-tab="art" aria-selected="true">Artwork</button>
         <button type="button" role="tab" data-tab="settings" aria-selected="false">Settings</button>
+        <button type="button" role="tab" data-tab="people" aria-selected="false" id="people-tab" hidden>People</button>
       </nav>
 
       <div id="tab-art">
@@ -202,6 +225,40 @@
           <div class="fmt-head"><span>Name</span><span>Sizes</span><span>From $</span><span>Layout</span><span>Description</span><span></span></div>
           <div id="format-rows"></div>
           <button class="btn btn-small" id="add-format" type="button" style="margin-top:12px">+ Add format</button>
+        </div>
+      </div>
+
+      <div id="tab-people" hidden>
+        <div class="panel">
+          <h2>People who can sign in</h2>
+          <p>Everyone here can add artwork, change settings, and publish.</p>
+          <div id="people-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Add a person</h2>
+          <p>Pick a username and a starting password, then tell them in person or by phone. They can change the password after signing in.</p>
+          <form id="add-person">
+            <div class="row2">
+              <label class="field">Username <small>Letters and numbers, e.g. sam</small>
+                <input name="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+              <label class="field">Starting password <small>At least 8 characters</small>
+                <input name="password" autocomplete="off" autocapitalize="none" spellcheck="false" minlength="8" required></label>
+            </div>
+            <button class="btn btn-primary btn-small" type="submit">Add person</button>
+          </form>
+          <p class="notice" id="people-msg" hidden style="margin-top:14px"></p>
+        </div>
+        <div class="panel">
+          <h2>Change your password</h2>
+          <form id="change-pw">
+            <div class="row2">
+              <label class="field">Current password <input name="current" type="password" autocomplete="current-password" required></label>
+              <label class="field">New password <small>At least 8 characters</small>
+                <input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+            </div>
+            <button class="btn btn-small" type="submit">Change password</button>
+          </form>
+          <p class="notice" id="pw-msg" hidden style="margin-top:14px"></p>
         </div>
       </div>
     </section>
@@ -266,16 +323,24 @@
   const REPO = { owner: "Jstrang8687", name: "patches", branch: "main" };
   const DATA_PATH = "js/works.js";
   const API = "https://api.github.com";
+  // Login service (worker/ folder). Empty means only GitHub-key sign-in is offered.
+  // A ?service= override is honored only on a local preview, never on the live site.
+  const LOGIN_SERVICE = "";
+  const WORKER_URL = (location.hostname === "localhost" && new URLSearchParams(location.search).get("service")) || LOGIN_SERVICE;
   const MAX_SIDE = 2000;      // longest side of uploaded photos, in pixels
   const QUALITY = 0.85;       // JPEG quality for uploads
   const TOKEN_KEY = "patches-admin-token";
+  const SESSION_KEY = "patches-admin-session";
   const SHOP_LABELS = { prints: "Print shop", etsy: "Etsy", custom: "Custom order form" };
 
   const $ = (s, r = document) => r.querySelector(s);
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const repoPath = (p) => `/repos/${REPO.owner}/${REPO.name}${p}`;
 
-  let token = null;
+  let mode = null;            // "session" (username/password) or "key" (GitHub access key)
+  let token = null;           // GitHub access key, in key mode
+  let session = null;         // login service session, in session mode
+  let myName = "";
   let data = null;            // the parsed window.PATCHES object being edited
   let header = "";            // comment block at the top of works.js, kept as-is
   let baseSha = null;         // commit the editor's copy is based on
@@ -290,13 +355,45 @@
 
   // ---- Storage (may be unavailable in private windows) ----
   const store = {
-    get() { try { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY); } catch { return null; } },
-    set(t, remember) { try { (remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, t); } catch {} },
-    clear() { try { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); } catch {} },
+    get(k) { try { return localStorage.getItem(k) || sessionStorage.getItem(k); } catch { return null; } },
+    set(k, v, remember) { try { (remember ? localStorage : sessionStorage).setItem(k, v); } catch {} },
+    clear(k) { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch {} },
   };
 
-  // ---- GitHub API ----
+  // ---- Login service ----
+  async function svc(path, payload) {
+    const res = await fetch(WORKER_URL + path, {
+      method: payload ? "POST" : "GET",
+      headers: {
+        ...(session ? { Authorization: "Bearer " + session } : {}),
+        ...(payload ? { "Content-Type": "application/json" } : {}),
+      },
+      body: payload ? JSON.stringify(payload) : undefined,
+      cache: "no-store",
+    });
+    let out = {};
+    try { out = await res.json(); } catch {}
+    if (!res.ok) { const e = new Error(out.error || "Login service error " + res.status); e.status = res.status; e.fromService = true; throw e; }
+    return out;
+  }
+
+  // ---- GitHub API (directly with a key, or through the login service) ----
   async function gh(path, opts = {}) {
+    if (mode === "session") {
+      const res = await fetch(WORKER_URL + "/github", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + session, "Content-Type": "application/json" },
+        body: JSON.stringify({ method: opts.method || "GET", path, body: opts.body }),
+        cache: "no-store",
+      });
+      let out = null;
+      try { out = await res.json(); } catch {}
+      if (!res.ok) {
+        const e = new Error((out && (out.error || out.message)) || "Error " + res.status);
+        e.status = res.status; e.fromService = !!(out && out.error); throw e;
+      }
+      return out;
+    }
     const res = await fetch(API + path, {
       method: opts.method || "GET",
       headers: {
@@ -353,50 +450,172 @@
   // ---- Sign in / out ----
   function show(id) { ["login", "loading", "app"].forEach((x) => ($("#" + x).hidden = x !== id)); }
 
-  async function signIn(t) {
-    token = t;
-    show("loading");
-    const repo = await gh(repoPath(""));
-    if (repo.permissions && !repo.permissions.push) throw new Error("This key can see the site but isn't allowed to change it.");
-    let who = "";
-    try { who = (await gh("/user")).login; } catch {}
+  async function enterApp(who) {
     await load();
+    myName = who;
     $("#who").textContent = who ? "Signed in as " + who : "Signed in";
     $("#bar-right").hidden = false;
+    $("#people-tab").hidden = mode !== "session";
     show("app");
     renderAll();
     renderSettings();
   }
 
+  async function signInKey(t) {
+    mode = "key"; token = t; session = null;
+    show("loading");
+    const repo = await gh(repoPath(""));
+    if (repo.permissions && !repo.permissions.push) throw new Error("This key can see the site but isn't allowed to change it.");
+    let who = "";
+    try { who = (await gh("/user")).login; } catch {}
+    await enterApp(who);
+  }
+
+  async function signInSession(s) {
+    mode = "session"; session = s; token = null;
+    show("loading");
+    const me = await svc("/me");
+    await enterApp(me.name);
+  }
+
   function friendlyAuthError(e) {
+    if (e.fromService) return e.message;
     if (e.status === 401) return "That access key didn't work. Check that you copied all of it, and that it hasn't expired.";
     if (e.status === 404 || e.status === 403) return "That key can't open the patches repository. Make sure you picked the patches repo under Repository access, and gave Contents read and write permission.";
+    if (e instanceof TypeError) return "Couldn't reach the server. Check your internet connection and try again.";
     return e.message || String(e);
   }
+
+  function loginError(msg) {
+    $("#login-error").textContent = msg || "";
+    $("#login-error").hidden = !msg;
+  }
+
+  // Show the right sign-in form: create the first login, username/password, or key only.
+  async function showLogin(msg) {
+    mode = null; token = null; session = null;
+    show("login");
+    loginError(msg);
+    if (!WORKER_URL) {
+      $("#pw-form").hidden = $("#setup-form").hidden = true;
+      $("#key-login").open = true;
+      return;
+    }
+    try {
+      const st = await svc("/status");
+      $("#setup-form").hidden = !st.needsSetup;
+      $("#pw-form").hidden = st.needsSetup;
+      if (!st.ready && !msg) loginError("Almost ready: the GitHub key still needs to be added in Cloudflare before anyone can publish.");
+    } catch {
+      $("#pw-form").hidden = false;
+      $("#setup-form").hidden = true;
+      if (!msg) loginError("Can't reach the login service right now. Try again in a minute, or use a GitHub access key below.");
+    }
+  }
+
+  async function startSession(s) {
+    store.set(SESSION_KEY, s, true);
+    try { await signInSession(s); } catch (err) { store.clear(SESSION_KEY); showLogin(friendlyAuthError(err)); }
+  }
+
+  $("#pw-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    loginError("");
+    try {
+      const out = await svc("/login", { username: $("#username").value, password: $("#password").value });
+      $("#password").value = "";
+      await startSession(out.token);
+    } catch (err) { loginError(friendlyAuthError(err)); }
+  });
+
+  $("#setup-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    loginError("");
+    try {
+      const out = await svc("/setup", { setupCode: $("#setup-code").value.trim(), username: $("#setup-user").value, password: $("#setup-pass").value });
+      $("#setup-pass").value = ""; $("#setup-code").value = "";
+      await startSession(out.token);
+    } catch (err) { loginError(friendlyAuthError(err)); }
+  });
 
   $("#login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const t = $("#token").value.trim();
-    $("#login-error").hidden = true;
+    loginError("");
     try {
-      await signIn(t);
-      store.set(t, $("#remember").checked);
+      await signInKey(t);
+      store.set(TOKEN_KEY, t, $("#remember").checked);
       $("#token").value = "";
     } catch (err) {
-      token = null;
-      show("login");
-      $("#login-error").textContent = friendlyAuthError(err);
-      $("#login-error").hidden = false;
+      const msg = friendlyAuthError(err);
+      await showLogin(msg);
+      $("#key-login").open = true;
     }
   });
 
-  $("#signout").addEventListener("click", () => {
+  $("#signout").addEventListener("click", async () => {
     if (changes.length && !confirm("You have unpublished changes. Sign out and lose them?")) return;
     changes = [];
-    store.clear();
-    token = null; data = null;
+    if (mode === "session") { try { await svc("/logout", {}); } catch {} }
+    store.clear(TOKEN_KEY); store.clear(SESSION_KEY);
+    data = null;
     $("#bar-right").hidden = true;
-    show("login");
+    showLogin();
+  });
+
+  // ---- People (login service only) ----
+  function peopleMsg(id, kind, text) {
+    const n = $(id);
+    n.className = "notice" + (kind ? " " + kind : "");
+    n.textContent = text;
+    n.hidden = !text;
+  }
+
+  async function renderPeople() {
+    const box = $("#people-list");
+    box.innerHTML = '<p class="a-meta">Loading…</p>';
+    try {
+      const { users } = await svc("/users");
+      box.innerHTML = "";
+      users.forEach((u) => {
+        const row = document.createElement("div");
+        row.className = "rule-row";
+        row.innerHTML = `<span><strong>${esc(u.name)}</strong>${u.name === myName ? " (you)" : ""}
+          <small>${u.createdBy ? "Added by " + esc(u.createdBy) : "First login"}</small></span>
+          <span style="text-align:right">${u.name === myName ? "" : '<button type="button" class="linklike">Remove</button>'}</span>`;
+        const btn = row.querySelector("button");
+        if (btn) btn.addEventListener("click", async () => {
+          if (!confirm(`Remove ${u.name}? They won't be able to sign in anymore.`)) return;
+          try { await svc("/users/remove", { username: u.name }); peopleMsg("#people-msg", "ok", `${u.name} was removed.`); renderPeople(); }
+          catch (err) { peopleMsg("#people-msg", "err", friendlyAuthError(err)); }
+        });
+        box.appendChild(row);
+      });
+    } catch (err) {
+      box.innerHTML = `<p class="notice err">${esc(friendlyAuthError(err))}</p>`;
+    }
+  }
+
+  $("#add-person").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f2 = e.target.elements;
+    const name = f2.username.value.trim().toLowerCase();
+    try {
+      await svc("/users", { username: name, password: f2.password.value });
+      peopleMsg("#people-msg", "ok", `Added ${name}. Tell them their username and starting password, and the sign-in page: ${location.href.split("#")[0]}`);
+      e.target.reset();
+      renderPeople();
+    } catch (err) { peopleMsg("#people-msg", "err", friendlyAuthError(err)); }
+  });
+
+  $("#change-pw").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f2 = e.target.elements;
+    try {
+      await svc("/password", { current: f2.current.value, password: f2.password.value });
+      peopleMsg("#pw-msg", "ok", "Password changed.");
+      e.target.reset();
+    } catch (err) { peopleMsg("#pw-msg", "err", friendlyAuthError(err)); }
   });
 
   // ---- Change tracking ----
@@ -488,9 +707,9 @@
 
   document.querySelectorAll(".tabs button").forEach((t) => t.addEventListener("click", () => {
     document.querySelectorAll(".tabs button").forEach((x) => x.setAttribute("aria-selected", x === t));
-    $("#tab-art").hidden = t.dataset.tab !== "art";
-    $("#tab-settings").hidden = t.dataset.tab !== "settings";
+    ["art", "settings", "people"].forEach((name) => ($("#tab-" + name).hidden = t.dataset.tab !== name));
     if (t.dataset.tab === "settings") renderSellRows();
+    if (t.dataset.tab === "people") renderPeople();
   }));
 
   // ---- Images ----
@@ -755,7 +974,9 @@
       const text = serialize();
       tree.push({ path: DATA_PATH, mode: "100644", type: "blob", content: text });
       const newTree = await gh(repoPath("/git/trees"), { method: "POST", body: { base_tree: parentCommit.tree.sha, tree } });
-      const message = (changes.length === 1 ? changes[0] : `${changes.length} changes from admin\n\n- ` + changes.join("\n- ")) + "\n\n(Published from the Patches admin page)";
+      // In session mode the login service appends "Published by <name>".
+      const message = (changes.length === 1 ? changes[0] : `${changes.length} changes from admin\n\n- ` + changes.join("\n- ")) +
+        (mode === "session" ? "" : "\n\n(Published from the Patches admin page)");
       const commit = await gh(repoPath("/git/commits"), { method: "POST", body: { message, tree: newTree.sha, parents: [parent] } });
       await gh(repoPath(`/git/refs/heads/${REPO.branch}`), { method: "PATCH", body: { sha: commit.sha } });
 
@@ -766,6 +987,10 @@
     } catch (e) {
       if (e.stale) {
         notice("err", "Someone else published changes since you opened this page, so publishing was stopped to avoid overwriting them. Note down your changes, then reload this page to get the latest version.");
+      } else if (mode === "session" && e.status === 401) {
+        notice("err", "Your sign-in expired. Sign out and sign back in, then publish again. Your changes are still here until you leave the page.");
+      } else if (e.fromService) {
+        notice("err", esc(e.message));
       } else if (e.status === 403 || e.status === 404) {
         notice("err", "GitHub didn't allow the change. Make sure your access key has <strong>Contents: Read and write</strong> permission for the patches repository.");
       } else if (e.status === 401) {
@@ -780,17 +1005,20 @@
   });
 
   // ---- Start ----
-  const saved = store.get();
-  if (saved) {
-    signIn(saved).catch((err) => {
-      if (err.status === 401) store.clear();
-      token = null;
-      show("login");
-      $("#login-error").textContent = friendlyAuthError(err);
-      $("#login-error").hidden = false;
+  const savedSession = WORKER_URL && store.get(SESSION_KEY);
+  const savedKey = store.get(TOKEN_KEY);
+  if (savedSession) {
+    signInSession(savedSession).catch((err) => {
+      if (err.status === 401) store.clear(SESSION_KEY);
+      showLogin(err.status === 401 ? "Your sign-in expired. Please sign in again." : friendlyAuthError(err));
+    });
+  } else if (savedKey) {
+    signInKey(savedKey).catch((err) => {
+      if (err.status === 401) store.clear(TOKEN_KEY);
+      showLogin(friendlyAuthError(err));
     });
   } else {
-    show("login");
+    showLogin();
   }
 })();
 </script>
