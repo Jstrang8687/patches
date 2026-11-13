@@ -325,7 +325,7 @@
   const API = "https://api.github.com";
   // Login service (worker/ folder). Empty means only GitHub-key sign-in is offered.
   // A ?service= override is honored only on a local preview, never on the live site.
-  const LOGIN_SERVICE = "";
+  const LOGIN_SERVICE = "https://patches-admin.patches-admin-worker.workers.dev";
   const WORKER_URL = (location.hostname === "localhost" && new URLSearchParams(location.search).get("service")) || LOGIN_SERVICE;
   const MAX_SIDE = 2000;      // longest side of uploaded photos, in pixels
   const QUALITY = 0.85;       // JPEG quality for uploads

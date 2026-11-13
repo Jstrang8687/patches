@@ -8,4 +8,4 @@ ALLOWED_ORIGINS = "https://jstrang8687.github.io,http://localhost:8080"
 # Users and sessions. The id is filled in when the namespace is created.
 [[kv_namespaces]]
 binding = "DB"
-id = "REPLACE_WITH_KV_ID"
+id = "319e553147ae4f5596ebb394c63116af"
