@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patches Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .admin-tag { font: 600 .75rem var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--sage);
+                 border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; margin-right: auto; margin-left: 14px; }
+    .bar-right { display: flex; align-items: center; gap: 12px; font-size: .9rem; color: var(--muted); }
+    .btn-small { padding: 7px 14px; font-size: .9rem; }
+    main.wrap { padding-top: 32px; padding-bottom: 80px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+    .panel h2 { font-size: 1.4rem; }
+    .panel > p { color: var(--muted); }
+    .login { max-width: 640px; margin: 24px auto; }
+    .login ol { padding-left: 20px; color: var(--muted); }
+    .login ol li { margin-bottom: 6px; }
+    .login code { background: var(--bg); padding: 1px 6px; border-radius: 4px; color: var(--ink); }
+    .field { display: grid; gap: 6px; font-weight: 500; font-size: .95rem; margin-bottom: 14px; }
+    .field input, .field select, .field textarea { font: inherit; font-weight: 400; color: var(--ink); background: var(--bg);
+      border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; width: 100%; }
+    .field textarea { min-height: 90px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+    .field small { font-weight: 400; color: var(--muted); }
+    .check { display: flex; gap: 8px; align-items: center; font-size: .95rem; margin-bottom: 14px; }
+    .row2 { display: grid; gap: 0 16px; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .row2 { grid-template-columns: 1fr 1fr; } }
+
+    .publish-bar { position: sticky; top: 68px; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+                   flex-wrap: wrap; background: var(--ink); color: var(--bg); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; }
+    .publish-bar.dirty { background: var(--accent); }
+    .publish-bar .btn { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+    .publish-bar .btn:disabled { opacity: .5; cursor: default; }
+    .notice { border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; border: 1px solid var(--line); background: var(--surface); }
+    .notice.ok { border-color: #9fb48a; background: #eef3e6; }
+    .notice.err { border-color: #d9a48c; background: #fbebe3; }
+
+    .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+    .tabs button { all: unset; cursor: pointer; padding: 10px 16px; font-weight: 600; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .tabs button[aria-selected="true"] { color: var(--ink); border-color: var(--accent); }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    .toolbar .filters { margin: 0; }
+
+    .admin-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    @media (max-width: 560px) {
+      .admin-grid { gap: 10px; grid-template-columns: 1fr 1fr; }
+      .a-actions button { font-size: .8rem; }
+      #who { display: none; }
+    }
+    .a-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+    .a-thumb { position: relative; aspect-ratio: 1; background: var(--line); display: flex; align-items: center; justify-content: center;
+               color: var(--muted); font-size: .85rem; }
+    .a-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .a-star { position: absolute; top: 8px; left: 8px; background: var(--ink); color: var(--bg); font-size: .72rem; font-weight: 600; border-radius: 999px; padding: 2px 8px; }
+    .a-body { padding: 10px 12px; display: grid; gap: 2px; flex: 1; }
+    .a-meta { font-size: .8rem; color: var(--muted); }
+    .a-price { font-size: .85rem; font-weight: 600; color: var(--accent); }
+    .a-price.sold, .a-price.commission { color: var(--muted); }
+    .a-actions { display: flex; border-top: 1px solid var(--line); }
+    .a-actions button { all: unset; cursor: pointer; padding: 9px 0; text-align: center; font-size: .85rem; font-weight: 600; flex: 1; color: var(--ink); }
+    .a-actions button + button { border-left: 1px solid var(--line); }
+    .a-actions button:hover { background: var(--bg); }
+    .a-actions button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .a-actions .del { color: var(--accent); }
+    .empty { color: var(--muted); }
+
+    dialog#editor { border: 0; padding: 0; border-radius: var(--radius); width: calc(100% - 24px); max-width: 760px;
+                    background: var(--surface); color: var(--ink); max-height: calc(100vh - 24px); }
+    dialog#editor::backdrop { background: rgba(30,26,22,.6); }
+    .ed-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+    .ed-head h2 { margin: 0; font-size: 1.4rem; }
+    .ed-body { padding: 20px 22px; display: grid; gap: 20px; grid-template-columns: 1fr; }
+    @media (min-width: 700px) { .ed-body { grid-template-columns: 240px 1fr; } }
+    .drop { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px;
+            aspect-ratio: 1; border: 2px dashed var(--line); border-radius: var(--radius); cursor: pointer; overflow: hidden;
+            color: var(--muted); font-size: .9rem; padding: 12px; background: var(--bg); position: relative; }
+    .drop.over { border-color: var(--accent); background: #fbf1ea; }
+    .drop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .img-info { font-size: .8rem; color: var(--muted); margin-top: 6px; }
+    .linklike { all: unset; cursor: pointer; color: var(--accent); font-size: .85rem; text-decoration: underline; }
+    .ed-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 22px; border-top: 1px solid var(--line); }
+
+    .rule-row, .fmt-row { display: grid; gap: 8px 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+    .rule-row { grid-template-columns: 1fr 1fr; }
+    .rule-row span small { display: block; color: var(--muted); font-size: .8rem; }
+    .fmt-row { grid-template-columns: 1fr; }
+    @media (min-width: 760px) { .fmt-row { grid-template-columns: 1.2fr 1.2fr 90px 130px 2fr auto; } }
+    .rule-row select, .fmt-row input, .fmt-row select { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+      border-radius: 8px; padding: 8px 10px; width: 100%; }
+    .fmt-head { display: none; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+    @media (min-width: 760px) { .fmt-head { display: grid; grid-template-columns: 1.2fr 1.2fr 90px 130px 2fr auto; gap: 12px; padding-bottom: 6px; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="../index.html" title="View the site">
+        <svg class="logo-badge" viewBox="0 0 220 140" role="img" aria-label="Patches">
+          <rect x="4" y="4" width="212" height="132" rx="28" fill="#a94f2b"/>
+          <rect x="14" y="14" width="192" height="112" rx="20" fill="none" stroke="#f6f1e9" stroke-width="4" stroke-dasharray="9 7"/>
+          <text x="110" y="85" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="42" fill="#f6f1e9">Patches</text>
+        </svg>
+      </a>
+      <span class="admin-tag">Admin</span>
+      <div class="bar-right" id="bar-right" hidden>
+        <span id="who"></span>
+        <button class="btn btn-small" id="signout" type="button">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="login" class="panel login" hidden>
+      <h1 style="font-size:2rem">Sign in to manage Patches</h1>
+      <p>This page edits the live site through GitHub. It needs a GitHub access key for the <code>patches</code> repository. You only have to do this once per device.</p>
+      <ol>
+        <li>Sign in to GitHub, then open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create a new access key</a>.</li>
+        <li>Name it <code>Patches admin</code> and pick an expiration (1 year is fine).</li>
+        <li>Under <strong>Repository access</strong>, choose <strong>Only select repositories</strong> and pick <code>patches</code>.</li>
+        <li>Under <strong>Permissions → Repository permissions</strong>, set <strong>Contents</strong> to <strong>Read and write</strong>.</li>
+        <li>Click <strong>Generate token</strong>, copy it, and paste it below.</li>
+      </ol>
+      <form id="login-form">
+        <label class="field">Access key
+          <input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="github_pat_..." required>
+        </label>
+        <label class="check"><input type="checkbox" id="remember" checked> Keep me signed in on this device</label>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+        <p class="notice err" id="login-error" hidden style="margin-top:16px"></p>
+      </form>
+    </section>
+
+    <section id="loading" hidden><p>Loading…</p></section>
+
+    <section id="app" hidden>
+      <div class="publish-bar" id="publish-bar">
+        <span id="pending-text">Everything is published</span>
+        <button class="btn btn-small" id="publish" type="button" disabled>Publish to site</button>
+      </div>
+      <div id="notice" class="notice" hidden></div>
+
+      <nav class="tabs" role="tablist">
+        <button type="button" role="tab" data-tab="art" aria-selected="true">Artwork</button>
+        <button type="button" role="tab" data-tab="settings" aria-selected="false">Settings</button>
+      </nav>
+
+      <div id="tab-art">
+        <div class="toolbar">
+          <div class="filters" id="craft-filter">
+            <button type="button" class="chip" data-craft="all" aria-pressed="true">All</button>
+            <button type="button" class="chip" data-craft="photography" aria-pressed="false">Photography</button>
+            <button type="button" class="chip" data-craft="woodworking" aria-pressed="false">Woodworking</button>
+          </div>
+          <button class="btn btn-primary" id="add" type="button">+ Add artwork</button>
+        </div>
+        <p class="a-meta" style="margin:-4px 0 14px">Pieces show on the site in this order. Use ← → to move them. New pieces go first in their gallery.</p>
+        <div class="admin-grid" id="art-grid"></div>
+      </div>
+
+      <div id="tab-settings" hidden>
+        <div class="panel">
+          <h2>Contact</h2>
+          <div class="row2">
+            <label class="field">Contact email <small>Used by the Email links and the custom order form.</small>
+              <input type="email" data-bind="config.email"></label>
+            <label class="field">Instagram link <small>Optional. Leave blank to hide it.</small>
+              <input type="url" data-bind="config.instagram" placeholder="https://instagram.com/..."></label>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Shops</h2>
+          <p>Paste each shop's main link once it exists. Until then, its buy buttons say "Inquire to buy" and open the custom order form.</p>
+          <div class="row2">
+            <label class="field">Print shop name <small>Shown on buttons, e.g. "Buy on Pixieset".</small>
+              <input data-bind="shops.prints.name"></label>
+            <label class="field">Print shop link <small>Main page of the photo print store.</small>
+              <input type="url" data-bind="shops.prints.url" placeholder="https://yourname.pixieset.com/"></label>
+          </div>
+          <div class="row2">
+            <label class="field">Etsy name
+              <input data-bind="shops.etsy.name"></label>
+            <label class="field">Etsy shop link
+              <input type="url" data-bind="shops.etsy.url" placeholder="https://www.etsy.com/shop/..."></label>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Where each kind of piece sells</h2>
+          <p>Category rules win over the "all photos" and "other woodworking" rules.</p>
+          <div id="sell-rows"></div>
+        </div>
+        <div class="panel">
+          <h2>Print formats</h2>
+          <p>The ways a photo can be ordered. These show on the Photography page and in each photo's popup.</p>
+          <div class="fmt-head"><span>Name</span><span>Sizes</span><span>From $</span><span>Layout</span><span>Description</span><span></span></div>
+          <div id="format-rows"></div>
+          <button class="btn btn-small" id="add-format" type="button" style="margin-top:12px">+ Add format</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="editor">
+    <form id="edit-form">
+      <div class="ed-head"><h2 id="ed-title">Add artwork</h2><button type="button" class="d-close" style="position:static" data-close aria-label="Close">&times;</button></div>
+      <div class="ed-body">
+        <div>
+          <label class="drop" id="drop">
+            <img id="ed-preview" alt="" hidden>
+            <span id="drop-text"><strong>Add a photo</strong><br>Click, or drop an image here</span>
+            <input type="file" id="ed-file" accept="image/*">
+          </label>
+          <div class="img-info" id="img-info"></div>
+          <button type="button" class="linklike" id="ed-remove-img" hidden>Remove photo</button>
+        </div>
+        <div>
+          <label class="field">Title <input name="title" required></label>
+          <div class="row2">
+            <label class="field">Type
+              <select name="craft"><option value="photography">Photography</option><option value="woodworking">Woodworking</option></select></label>
+            <label class="field">Category <small>Filter group, e.g. Wildlife, Wands</small>
+              <input name="category" list="cat-list" autocomplete="off"><datalist id="cat-list"></datalist></label>
+          </div>
+          <div class="row2">
+            <label class="field">Price ($) <small>Leave blank to show "Inquire"</small>
+              <input name="price" type="number" min="0" step="1" inputmode="numeric"></label>
+            <label class="field">Status
+              <select name="status">
+                <option value="available">Available</option>
+                <option value="sold">Sold</option>
+                <option value="commission">Commissioned (past client work)</option>
+              </select></label>
+          </div>
+          <label class="check"><input type="checkbox" name="featured"> Also show on the home page</label>
+          <label class="field">Description <textarea name="description" rows="3"></textarea></label>
+          <label class="field">Details <small>One per line: size, wood, print type…</small>
+            <textarea name="details" rows="4"></textarea></label>
+          <label class="field">Listing link <small>This piece's own page on Etsy, Pixieset… Leave blank to use the shop's main page.</small>
+            <input name="link" type="url" placeholder="https://..."></label>
+          <label class="field">Sell through
+            <select name="shop">
+              <option value="" id="shop-default">Default</option>
+              <option value="prints">Print shop</option>
+              <option value="etsy">Etsy</option>
+              <option value="custom">Custom order form (quote)</option>
+            </select></label>
+        </div>
+      </div>
+      <div class="ed-foot">
+        <button type="button" class="btn" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save piece</button>
+      </div>
+    </form>
+  </dialog>
+
+<script>
+(function () {
+  // ---- Where the site lives on GitHub ----
+  const REPO = { owner: "Jstrang8687", name: "patches", branch: "main" };
+  const DATA_PATH = "js/works.js";
+  const API = "https://api.github.com";
+  const MAX_SIDE = 2000;      // longest side of uploaded photos, in pixels
+  const QUALITY = 0.85;       // JPEG quality for uploads
+  const TOKEN_KEY = "patches-admin-token";
+  const SHOP_LABELS = { prints: "Print shop", etsy: "Etsy", custom: "Custom order form" };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const repoPath = (p) => `/repos/${REPO.owner}/${REPO.name}${p}`;
+
+  let token = null;
+  let data = null;            // the parsed window.PATCHES object being edited
+  let header = "";            // comment block at the top of works.js, kept as-is
+  let baseSha = null;         // commit the editor's copy is based on
+  let baseText = null;        // works.js text at baseSha
+  let pendingImages = {};     // path -> { base64, url } waiting to be published
+  let pendingDeletes = new Set();
+  let previews = {};          // path -> local preview url for just-published images
+  let changes = [];           // short descriptions for the publish message
+  let craftFilter = "all";
+  let editing = null;         // piece being edited, or null when adding
+  let edImage = null;         // new photo for the editor, or "remove"
+
+  // ---- Storage (may be unavailable in private windows) ----
+  const store = {
+    get() { try { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY); } catch { return null; } },
+    set(t, remember) { try { (remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, t); } catch {} },
+    clear() { try { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); } catch {} },
+  };
+
+  // ---- GitHub API ----
+  async function gh(path, opts = {}) {
+    const res = await fetch(API + path, {
+      method: opts.method || "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        ...(opts.body ? { "Content-Type": "application/json" } : {}),
+      },
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      let msg = "GitHub error " + res.status;
+      try { msg = (await res.json()).message || msg; } catch {}
+      const e = new Error(msg); e.status = res.status; throw e;
+    }
+    return res.status === 204 ? null : res.json();
+  }
+
+  function bytesToB64(bytes) {
+    let s = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(s);
+  }
+  const b64ToText = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g, "")), (c) => c.charCodeAt(0)));
+
+  function parseData(text) {
+    const m = text.match(/^window\.PATCHES\s*=\s*([\s\S]*);\s*$/m);
+    if (!m) throw new Error("Couldn't find the artwork list in js/works.js.");
+    return { header: text.slice(0, m.index), data: JSON.parse(m[1]) };
+  }
+  const serialize = () => header + "window.PATCHES = " + JSON.stringify(data, null, 2) + ";\n";
+
+  async function readDataAt(sha) {
+    const file = await gh(repoPath(`/contents/${DATA_PATH}?ref=${sha}`));
+    return b64ToText(file.content);
+  }
+
+  async function load() {
+    const ref = await gh(repoPath(`/git/ref/heads/${REPO.branch}`));
+    baseSha = ref.object.sha;
+    baseText = await readDataAt(baseSha);
+    ({ header, data } = parseData(baseText));
+    data.config = data.config || {};
+    data.shops = data.shops || {};
+    data.shops.prints = data.shops.prints || { name: "Pixieset", url: "" };
+    data.shops.etsy = data.shops.etsy || { name: "Etsy", url: "" };
+    data.sellOn = data.sellOn || {};
+    data.printFormats = data.printFormats || [];
+    data.works = data.works || [];
+    pendingImages = {}; pendingDeletes = new Set(); changes = [];
+  }
+
+  // ---- Sign in / out ----
+  function show(id) { ["login", "loading", "app"].forEach((x) => ($("#" + x).hidden = x !== id)); }
+
+  async function signIn(t) {
+    token = t;
+    show("loading");
+    const repo = await gh(repoPath(""));
+    if (repo.permissions && !repo.permissions.push) throw new Error("This key can see the site but isn't allowed to change it.");
+    let who = "";
+    try { who = (await gh("/user")).login; } catch {}
+    await load();
+    $("#who").textContent = who ? "Signed in as " + who : "Signed in";
+    $("#bar-right").hidden = false;
+    show("app");
+    renderAll();
+    renderSettings();
+  }
+
+  function friendlyAuthError(e) {
+    if (e.status === 401) return "That access key didn't work. Check that you copied all of it, and that it hasn't expired.";
+    if (e.status === 404 || e.status === 403) return "That key can't open the patches repository. Make sure you picked the patches repo under Repository access, and gave Contents read and write permission.";
+    return e.message || String(e);
+  }
+
+  $("#login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const t = $("#token").value.trim();
+    $("#login-error").hidden = true;
+    try {
+      await signIn(t);
+      store.set(t, $("#remember").checked);
+      $("#token").value = "";
+    } catch (err) {
+      token = null;
+      show("login");
+      $("#login-error").textContent = friendlyAuthError(err);
+      $("#login-error").hidden = false;
+    }
+  });
+
+  $("#signout").addEventListener("click", () => {
+    if (changes.length && !confirm("You have unpublished changes. Sign out and lose them?")) return;
+    changes = [];
+    store.clear();
+    token = null; data = null;
+    $("#bar-right").hidden = true;
+    show("login");
+  });
+
+  // ---- Change tracking ----
+  function markChanged(label) {
+    if (label && !changes.includes(label)) changes.push(label);
+    renderStatus();
+  }
+  function renderStatus() {
+    const n = changes.length;
+    $("#pending-text").textContent = n ? `${n} unpublished change${n === 1 ? "" : "s"}` : "Everything is published";
+    $("#publish-bar").classList.toggle("dirty", n > 0);
+    $("#publish").disabled = n === 0;
+  }
+  window.addEventListener("beforeunload", (e) => { if (changes.length) { e.preventDefault(); e.returnValue = ""; } });
+
+  function notice(kind, html) {
+    const n = $("#notice");
+    n.className = "notice" + (kind ? " " + kind : "");
+    n.innerHTML = html;
+    n.hidden = !html;
+  }
+
+  // ---- Artwork grid ----
+  const craftName = (c) => (c === "photography" ? "Photography" : "Woodworking");
+  const imgSrc = (p) => (pendingImages[p] && pendingImages[p].url) || previews[p] || "../" + p;
+  function priceText(w) {
+    if (w.status === "sold") return "Sold";
+    if (w.status === "commission") return "Commissioned";
+    return typeof w.price === "number" ? "$" + w.price.toLocaleString() : "Inquire";
+  }
+
+  function renderGrid() {
+    const grid = $("#art-grid");
+    const list = data.works.filter((w) => craftFilter === "all" || w.craft === craftFilter);
+    grid.innerHTML = list.length ? "" : '<p class="empty">No artwork here yet. Click "Add artwork" to add the first piece.</p>';
+    list.forEach((w) => {
+      const el = document.createElement("article");
+      el.className = "a-card";
+      el.innerHTML = `
+        <div class="a-thumb">${w.image ? `<img src="${esc(imgSrc(w.image))}" alt="" loading="lazy">` : "<span>No photo yet</span>"}
+          ${w.featured ? '<span class="a-star">★ Home page</span>' : ""}</div>
+        <div class="a-body">
+          <strong>${esc(w.title)}</strong>
+          <span class="a-meta">${esc(craftName(w.craft))} · ${esc(w.category || "No category")}</span>
+          <span class="a-price ${esc(w.status)}">${esc(priceText(w))}</span>
+        </div>
+        <div class="a-actions">
+          <button type="button" data-act="up" title="Move earlier" aria-label="Move ${esc(w.title)} earlier">←</button>
+          <button type="button" data-act="edit">Edit</button>
+          <button type="button" data-act="down" title="Move later" aria-label="Move ${esc(w.title)} later">→</button>
+          <button type="button" data-act="delete" class="del">Delete</button>
+        </div>`;
+      el.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => act(b.dataset.act, w)));
+      grid.appendChild(el);
+    });
+  }
+
+  function act(what, w) {
+    if (what === "edit") return openEditor(w);
+    if (what === "up" || what === "down") return move(w, what === "up" ? -1 : 1);
+    if (what === "delete") {
+      if (!confirm(`Delete "${w.title}"? It disappears from the site when you publish.`)) return;
+      dropImage(w.image, w);
+      data.works.splice(data.works.indexOf(w), 1);
+      markChanged(`Delete "${w.title}"`);
+      renderAll();
+    }
+  }
+
+  // Swap with the nearest piece of the same craft, since each gallery only shows its own craft.
+  function move(w, dir) {
+    const arr = data.works;
+    const i = arr.indexOf(w);
+    let j = i + dir;
+    while (j >= 0 && j < arr.length && arr[j].craft !== w.craft) j += dir;
+    if (j < 0 || j >= arr.length) return;
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+    markChanged(`Reorder ${craftName(w.craft).toLowerCase()}`);
+    renderGrid();
+  }
+
+  $("#craft-filter").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    craftFilter = b.dataset.craft;
+    document.querySelectorAll("#craft-filter .chip").forEach((c) => c.setAttribute("aria-pressed", c === b));
+    renderGrid();
+  });
+
+  document.querySelectorAll(".tabs button").forEach((t) => t.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach((x) => x.setAttribute("aria-selected", x === t));
+    $("#tab-art").hidden = t.dataset.tab !== "art";
+    $("#tab-settings").hidden = t.dataset.tab !== "settings";
+    if (t.dataset.tab === "settings") renderSellRows();
+  }));
+
+  // ---- Images ----
+  async function processImage(file) {
+    let src;
+    try {
+      src = await createImageBitmap(file, { imageOrientation: "from-image" });
+    } catch {
+      src = await new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => res(img);
+        img.onerror = () => rej(new Error("unreadable"));
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    const scale = Math.min(1, MAX_SIDE / Math.max(src.width, src.height));
+    const c = document.createElement("canvas");
+    c.width = Math.round(src.width * scale);
+    c.height = Math.round(src.height * scale);
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(src, 0, 0, c.width, c.height);
+    const blob = await new Promise((r) => c.toBlob(r, "image/jpeg", QUALITY));
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    return { base64: bytesToB64(bytes), url: URL.createObjectURL(blob), width: c.width, height: c.height, kb: Math.round(bytes.length / 1024) };
+  }
+
+  // Forget a piece's old photo: drop it if it was never published, or delete the file on publish if nothing else uses it.
+  function dropImage(path, owner) {
+    if (!path) return;
+    if (pendingImages[path]) { delete pendingImages[path]; return; }
+    if (path.startsWith("images/") && !data.works.some((x) => x !== owner && x.image === path)) pendingDeletes.add(path);
+  }
+
+  // ---- Editor ----
+  const dialog = $("#editor");
+  const form = $("#edit-form");
+  const f = form.elements;
+
+  function slugify(s) {
+    return s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "piece";
+  }
+  function uniqueId(title) {
+    const base = slugify(title);
+    let id = base, n = 2;
+    while (data.works.some((w) => w.id === id)) id = `${base}-${n++}`;
+    return id;
+  }
+  const defaultShop = (craft, category) => (category && data.sellOn[category]) || data.sellOn[craft] || "custom";
+
+  function updateShopDefaultLabel() {
+    $("#shop-default").textContent = `Default for this category (${SHOP_LABELS[defaultShop(f.craft.value, f.category.value.trim())] || "Custom order form"})`;
+  }
+  function updateCategoryList() {
+    const cats = [...new Set(data.works.filter((w) => w.craft === f.craft.value).map((w) => w.category).filter(Boolean))].sort();
+    $("#cat-list").innerHTML = cats.map((c) => `<option value="${esc(c)}">`).join("");
+  }
+  function setPreview(src, info) {
+    $("#ed-preview").hidden = !src;
+    if (src) $("#ed-preview").src = src; else $("#ed-preview").removeAttribute("src");
+    $("#drop-text").hidden = !!src;
+    $("#img-info").textContent = info || "";
+    $("#ed-remove-img").hidden = !src;
+  }
+
+  function openEditor(w) {
+    editing = w || null;
+    edImage = null;
+    form.reset();
+    $("#ed-title").textContent = w ? "Edit artwork" : "Add artwork";
+    if (w) {
+      f.title.value = w.title || "";
+      f.craft.value = w.craft || "photography";
+      f.category.value = w.category || "";
+      f.price.value = typeof w.price === "number" ? w.price : "";
+      f.status.value = w.status || "available";
+      f.featured.checked = !!w.featured;
+      f.description.value = w.description || "";
+      f.details.value = (w.details || []).join("\n");
+      f.link.value = w.link || "";
+      f.shop.value = w.shop || "";
+    } else if (craftFilter !== "all") {
+      f.craft.value = craftFilter;
+    }
+    setPreview(w && w.image ? imgSrc(w.image) : null, w && w.image ? "Click the photo to replace it." : "");
+    updateCategoryList();
+    updateShopDefaultLabel();
+    dialog.showModal();
+    if (!w) f.title.focus();
+  }
+
+  async function takeFile(file) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) { $("#img-info").textContent = "That isn't an image. Use a JPG or PNG photo."; return; }
+    $("#img-info").textContent = "Preparing photo…";
+    try {
+      edImage = await processImage(file);
+      setPreview(edImage.url, `Resized to ${edImage.width}×${edImage.height}, ${edImage.kb} KB. Click to replace.`);
+    } catch {
+      edImage = null;
+      $("#img-info").textContent = "Couldn't read that photo. Try a JPG or PNG (iPhone HEIC photos may need converting).";
+    }
+  }
+  $("#ed-file").addEventListener("change", (e) => { takeFile(e.target.files[0]); e.target.value = ""; });
+  const drop = $("#drop");
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); takeFile(e.dataTransfer.files[0]); });
+  $("#ed-remove-img").addEventListener("click", () => { edImage = "remove"; setPreview(null, "Photo will be removed when you save."); $("#ed-remove-img").hidden = true; });
+  f.craft.addEventListener("change", () => { updateCategoryList(); updateShopDefaultLabel(); });
+  f.category.addEventListener("input", updateShopDefaultLabel);
+  dialog.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => dialog.close()));
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const title = f.title.value.trim();
+    if (!title) return f.title.focus();
+    const isNew = !editing;
+    const old = editing || {};
+    const id = old.id || uniqueId(title);
+
+    // Rebuild in a tidy key order, keeping any fields this form doesn't know about.
+    const w = { id, craft: f.craft.value, category: f.category.value.trim(), title };
+    const price = f.price.value.trim();
+    if (price !== "") w.price = Math.max(0, Math.round(Number(price)));
+    w.status = f.status.value;
+    if (f.featured.checked) w.featured = true;
+    w.image = old.image || "";
+    w.description = f.description.value.trim();
+    w.details = f.details.value.split("\n").map((s) => s.trim()).filter(Boolean);
+    w.link = f.link.value.trim();
+    if (f.shop.value) w.shop = f.shop.value;
+    for (const k of Object.keys(old)) if (!(k in w) && !["price", "featured", "shop"].includes(k)) w[k] = old[k];
+
+    if (edImage === "remove") {
+      dropImage(old.image, old);
+      w.image = "";
+    } else if (edImage) {
+      const path = `images/${w.craft}/${id}-${Date.now().toString(36)}.jpg`;
+      dropImage(old.image, old);
+      pendingImages[path] = edImage;
+      w.image = path;
+    }
+
+    if (isNew) {
+      const first = data.works.findIndex((x) => x.craft === w.craft);
+      data.works.splice(first < 0 ? data.works.length : first, 0, w);
+    } else {
+      data.works[data.works.indexOf(old)] = w;
+    }
+    markChanged(isNew ? `Add "${title}"` : `Update "${title}"`);
+    dialog.close();
+    renderAll();
+  });
+
+  $("#add").addEventListener("click", () => openEditor(null));
+
+  // ---- Settings ----
+  const getPath = (path) => path.split(".").reduce((o, k) => (o ? o[k] : undefined), data);
+  function setPath(path, value) {
+    const keys = path.split(".");
+    const last = keys.pop();
+    const obj = keys.reduce((o, k) => (o[k] = o[k] || {}), data);
+    obj[last] = value;
+  }
+
+  function renderSettings() {
+    document.querySelectorAll("[data-bind]").forEach((inp) => { inp.value = getPath(inp.dataset.bind) || ""; });
+    renderSellRows();
+    renderFormats();
+  }
+  document.querySelectorAll("[data-bind]").forEach((inp) => inp.addEventListener("input", () => {
+    setPath(inp.dataset.bind, inp.value.trim());
+    markChanged("Update settings");
+  }));
+
+  function renderSellRows() {
+    const rows = [
+      { key: "photography", label: "All photos", hint: "Unless a category below says otherwise" },
+      { key: "woodworking", label: "Other woodworking", hint: "Woodworking not covered below" },
+    ];
+    const cats = [...new Set(data.works.map((w) => w.category).filter(Boolean).concat(
+      Object.keys(data.sellOn).filter((k) => k !== "photography" && k !== "woodworking")))].sort();
+    cats.forEach((c) => {
+      const craft = (data.works.find((w) => w.category === c) || {}).craft;
+      rows.push({ key: c, label: c, hint: craft ? craftName(craft) + " category" : "Category", optional: true });
+    });
+    const opts = (r) => (r.optional ? `<option value="">Same as its type</option>` : "") +
+      Object.entries(SHOP_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
+    const box = $("#sell-rows");
+    box.innerHTML = rows.map((r) => `
+      <div class="rule-row"><span>${esc(r.label)}<small>${esc(r.hint)}</small></span>
+        <select data-key="${esc(r.key)}">${opts(r)}</select></div>`).join("");
+    box.querySelectorAll("select").forEach((s) => {
+      s.value = data.sellOn[s.dataset.key] || "";
+      if (!s.value && !s.querySelector('option[value=""]')) s.value = "custom";
+      s.addEventListener("change", () => {
+        if (s.value) data.sellOn[s.dataset.key] = s.value; else delete data.sellOn[s.dataset.key];
+        markChanged("Update where things sell");
+      });
+    });
+  }
+
+  const LAYOUTS = { single: "Single print", large: "Large piece", triptych: "3-piece split", set: "Set of 3" };
+  function renderFormats() {
+    const box = $("#format-rows");
+    box.innerHTML = "";
+    data.printFormats.forEach((fmt, i) => {
+      const row = document.createElement("div");
+      row.className = "fmt-row";
+      row.innerHTML = `
+        <input data-k="name" value="${esc(fmt.name)}" aria-label="Name">
+        <input data-k="sizes" value="${esc(fmt.sizes)}" aria-label="Sizes">
+        <input data-k="from" type="number" min="0" value="${esc(fmt.from)}" aria-label="From price">
+        <select data-k="layout" aria-label="Layout">${Object.entries(LAYOUTS).map(([v, l]) => `<option value="${v}">${l}</option>`).join("")}</select>
+        <input data-k="blurb" value="${esc(fmt.blurb)}" aria-label="Description">
+        <button type="button" class="linklike" data-remove>Remove</button>`;
+      row.querySelector('[data-k="layout"]').value = fmt.layout || "single";
+      row.querySelectorAll("[data-k]").forEach((inp) => inp.addEventListener("input", () => {
+        fmt[inp.dataset.k] = inp.dataset.k === "from" ? Math.max(0, Number(inp.value) || 0) : inp.value;
+        markChanged("Update print formats");
+      }));
+      row.querySelector("[data-remove]").addEventListener("click", () => {
+        if (!confirm(`Remove the "${fmt.name}" format?`)) return;
+        data.printFormats.splice(i, 1);
+        markChanged("Update print formats");
+        renderFormats();
+      });
+      box.appendChild(row);
+    });
+  }
+  $("#add-format").addEventListener("click", () => {
+    let id = "format", n = 2;
+    while (data.printFormats.some((x) => x.id === id)) id = "format-" + n++;
+    data.printFormats.push({ id, layout: "single", name: "New format", sizes: "", from: 0, blurb: "" });
+    markChanged("Update print formats");
+    renderFormats();
+  });
+
+  function renderAll() { renderGrid(); renderStatus(); }
+
+  // ---- Publish: one commit with every new photo, deleted photo, and the updated list ----
+  $("#publish").addEventListener("click", async () => {
+    const btn = $("#publish");
+    btn.disabled = true;
+    btn.textContent = "Publishing…";
+    notice("", "Publishing your changes…");
+    try {
+      const ref = await gh(repoPath(`/git/ref/heads/${REPO.branch}`));
+      const parent = ref.object.sha;
+      if (parent !== baseSha && (await readDataAt(parent)) !== baseText) {
+        const e = new Error("stale"); e.stale = true; throw e;
+      }
+      const parentCommit = await gh(repoPath(`/git/commits/${parent}`));
+      const tree = [];
+      for (const [path, img] of Object.entries(pendingImages)) {
+        const blob = await gh(repoPath("/git/blobs"), { method: "POST", body: { content: img.base64, encoding: "base64" } });
+        tree.push({ path, mode: "100644", type: "blob", sha: blob.sha });
+      }
+      for (const path of pendingDeletes) tree.push({ path, mode: "100644", type: "blob", sha: null });
+      const text = serialize();
+      tree.push({ path: DATA_PATH, mode: "100644", type: "blob", content: text });
+      const newTree = await gh(repoPath("/git/trees"), { method: "POST", body: { base_tree: parentCommit.tree.sha, tree } });
+      const message = (changes.length === 1 ? changes[0] : `${changes.length} changes from admin\n\n- ` + changes.join("\n- ")) + "\n\n(Published from the Patches admin page)";
+      const commit = await gh(repoPath("/git/commits"), { method: "POST", body: { message, tree: newTree.sha, parents: [parent] } });
+      await gh(repoPath(`/git/refs/heads/${REPO.branch}`), { method: "PATCH", body: { sha: commit.sha } });
+
+      for (const [path, img] of Object.entries(pendingImages)) previews[path] = img.url;
+      baseSha = commit.sha; baseText = text;
+      pendingImages = {}; pendingDeletes = new Set(); changes = [];
+      notice("ok", 'Published! The live site updates in about a minute. <a href="../index.html" target="_blank" rel="noopener">Open the site</a>');
+    } catch (e) {
+      if (e.stale) {
+        notice("err", "Someone else published changes since you opened this page, so publishing was stopped to avoid overwriting them. Note down your changes, then reload this page to get the latest version.");
+      } else if (e.status === 403 || e.status === 404) {
+        notice("err", "GitHub didn't allow the change. Make sure your access key has <strong>Contents: Read and write</strong> permission for the patches repository.");
+      } else if (e.status === 401) {
+        notice("err", "Your access key stopped working (it may have expired). Sign out and sign in with a new one. Your changes are still here until you leave the page.");
+      } else {
+        notice("err", "Publishing failed: " + esc(e.message || e) + ". Your changes are still here; try again.");
+      }
+    } finally {
+      btn.textContent = "Publish to site";
+      renderAll();
+    }
+  });
+
+  // ---- Start ----
+  const saved = store.get();
+  if (saved) {
+    signIn(saved).catch((err) => {
+      if (err.status === 401) store.clear();
+      token = null;
+      show("login");
+      $("#login-error").textContent = friendlyAuthError(err);
+      $("#login-error").hidden = false;
+    });
+  } else {
+    show("login");
+  }
+})();
+</script>
+</body>
+</html>

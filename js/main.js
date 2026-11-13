@@ -44,7 +44,7 @@
     el.className = "card" + (w.status === "sold" ? " is-sold" : "");
     el.dataset.category = w.category || "";
     el.innerHTML = `
-      <span class="card-img"><img src="${imageFor(w)}" alt="${esc(w.title)}" loading="lazy"></span>
+      <span class="card-img"><img src="${esc(imageFor(w))}" alt="${esc(w.title)}" loading="lazy"></span>
       <span class="card-body">
         <span class="card-title">${esc(w.title)}</span>
         <span class="card-price">${priceLabel(w)}</span>
