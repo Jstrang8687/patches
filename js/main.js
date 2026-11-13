@@ -200,6 +200,11 @@
   });
   document.querySelectorAll("[data-year]").forEach((s) => (s.textContent = new Date().getFullYear()));
 
+  // Sign-in links say "Admin" on a device that's already signed in to the admin page.
+  let signedIn = false;
+  try { signedIn = !!(localStorage.getItem("patches-admin-session") || localStorage.getItem("patches-admin-token")); } catch {}
+  if (signedIn) document.querySelectorAll("[data-signin]").forEach((a) => (a.textContent = "Admin"));
+
   // Mobile menu
   const toggle = document.querySelector(".nav-toggle");
   if (toggle) toggle.addEventListener("click", () => document.body.classList.toggle("nav-open"));

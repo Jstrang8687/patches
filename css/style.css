@@ -181,3 +181,13 @@ dialog#detail::backdrop { background: rgba(30,26,22,.7); }
 .buy-card .buy-where { font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--sage); font-weight: 600; margin-bottom: 10px; }
 .buy-card .btn { margin-top: auto; align-self: flex-start; }
 #buy { scroll-margin-top: 80px; }
+
+/* ---------- Sign in button ---------- */
+@media (min-width: 720px) {
+  .nav { align-items: center; }
+  .nav .nav-signin { border: 1.5px solid var(--ink); border-radius: 999px; padding: 6px 16px; color: var(--ink); }
+  .nav .nav-signin:hover { background: var(--ink); color: var(--bg); }
+}
+@media (max-width: 719px) {
+  .nav .nav-signin { color: var(--accent); font-weight: 600; }
+}
