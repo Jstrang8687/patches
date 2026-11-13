@@ -89,7 +89,7 @@ window.PATCHES = {
       "id": "red-fox",
       "craft": "photography",
       "category": "Wildlife",
-      "title": "Red Fox in Snow",
+      "title": "El Gringo en El Panama",
       "price": 85,
       "status": "available",
       "featured": true,
