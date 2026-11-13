@@ -94,10 +94,9 @@ window.PATCHES = {
       "status": "available",
       "featured": true,
       "image": "images/photography/red-fox-mwfeg6y4.jpg",
-      "description": "A red fox pausing mid-hunt in fresh snow.",
+      "description": "El Gringo en El Panama",
       "details": [
-        "Signed archival print",
-        "Available in every format below"
+        "seperated white guy looking for love"
       ],
       "link": ""
     },
