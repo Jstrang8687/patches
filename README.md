@@ -13,6 +13,7 @@ woodworking.html    Woodworking gallery
 about.html          About + contact
 custom.html         Custom order form
 admin/              Admin page for adding artwork and changing settings
+worker/             Login service for the admin page (runs on Cloudflare)
 brand/              Logo ideas (not linked from the site)
 js/works.js         Settings, shop links, and every piece (the admin page edits this)
 js/main.js          Draws the galleries and the detail popup
@@ -33,17 +34,22 @@ Add, edit, reorder, and delete artwork, upload photos, and change the email, sho
 
 ### Signing in
 
-The admin page needs a GitHub access key (a "fine-grained token") that can change this repository:
+Sign in with a **username and password**. Logins are handled by a small login service on Cloudflare (the `worker/` folder), which keeps the GitHub key hidden.
 
-1. Sign in to GitHub and open https://github.com/settings/personal-access-tokens/new
-2. Name it `Patches admin`, and pick an expiration.
-3. **Repository access:** Only select repositories → `patches`.
-4. **Repository permissions → Contents:** Read and write. Nothing else is needed.
-5. Generate it, then paste it into the admin page.
+- **Add someone:** sign in, open the **People** tab, and pick a username and starting password for them. Tell them in person or by phone. They can change it on the same tab.
+- **Remove someone:** People tab → **Remove**. They're signed out immediately.
+- **Forgot a password:** another person removes and re-adds them with a new starting password.
+- **Too many wrong passwords** locks sign-in from that device for 15 minutes.
+- Logins can only change the artwork list and photos, not the rest of the site. Each publish records who did it.
 
-The key is saved only in that browser. Click **Sign out** on shared computers. When the key expires, make a new one the same way.
+**Cloudflare settings** (Workers & Pages → `patches-admin` → Settings → Variables and Secrets):
 
-**For your brother:** add him to the repo first (**Settings → Collaborators → Add people**). Then he creates his own key from his GitHub account and selects the `patches` repo. Each person having their own key means you can turn off one without affecting the other.
+- `GITHUB_TOKEN`: a fine-grained GitHub key for the `patches` repo with **Contents: Read and write**. When it expires (GitHub emails a reminder), make a new one at https://github.com/settings/personal-access-tokens/new and replace the value here. Nobody needs to sign in again.
+- `SETUP_CODE`: only used to create the very first login.
+
+**Updating the login service** after changing `worker/src/index.js`: from the `worker/` folder, run `npx wrangler deploy`.
+
+**Fallback:** "Use a GitHub access key instead" on the sign-in page still works with a personal GitHub key, if the login service is ever down.
 
 ## Editing by hand
 
